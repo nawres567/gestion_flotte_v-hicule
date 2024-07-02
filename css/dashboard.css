@@ -592,6 +592,79 @@ body {
 }
 
 /* Styles for the add vehicle button */
+
+
+btn-add-vehicle:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+btn-add-vehicle:active {
+    transform: translateY(0);
+}
+/* The Modal (background) */
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+input[type="text"], input[type="textarea"], input[type="number"], input[type="date"], input[type="email"]{
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    width: 350px;
+    height: 35px;
+    
+}
+
+
+button {
+    padding: 1px;
+    font-size: 16px;
+    background-color: rgb(5, 20, 137);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    height: 35px;
+    width: 350px;
+}
 btn-add-vehicle {
     padding: 10px 20px;
     font-size: 14px;
@@ -605,11 +678,8 @@ btn-add-vehicle {
     margin-right: 20px; /* Adjust margin as needed */
 }
 
-btn-add-vehicle:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
-}
-
-btn-add-vehicle:active {
-    transform: translateY(0);
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

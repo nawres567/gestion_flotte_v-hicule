@@ -25,13 +25,13 @@
                     <span class="text">Dashboard</span>
                 </a>
             </li>
-            <li class="active">
+            <li >
                 <a href="vehicule.php">
                     <i class='bx bxs-car' ></i>
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group' ></i>
                     <span class="text">Conducteurs</span>
@@ -87,7 +87,7 @@
             <label for="switch-mode" class="switch-mode"></label>
             <a href="#" class="notification">
                 <i class='bx bxs-bell' ></i>
-                <span class="num">8</span>
+              
             </a>
             <a href="#" class="profile">
                 <img src="img/people.webp">
@@ -99,10 +99,10 @@
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Véhicules</h1>
+                    <h1>Conducteurs</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">Véhicules</a>
+                            <a href="#">Conducteurs</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
@@ -114,10 +114,10 @@
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Liste des véhicules</h3>
+                        <h3>Liste des conducteurs</h3>
                        
             
-                        <button class="btn-add-vehicle" id="btn-add-vehicle" style="padding: 10px 20px; width:170px; color: white;"><a href="ajoutVéhicule.php" style="color: white;">Ajouter Véhicule</a></button>
+                        <button class="btn-add-vehicle" id="btn-add-vehicle" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutConducteur.php" style="color: white;">Ajouter Conducteur</a></button>
                     </div>
                     <table>
                         <thead>

@@ -51,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div>
                 <button type="submit">Login</button>
+                <p>Vous n'avez pas encore de compte?<a href="register.php">S'inscrire</a></p>
+                
             </div>
             <?php if (isset($error)) { echo "<p class='error'>$error</p>"; } ?>
         </form>
