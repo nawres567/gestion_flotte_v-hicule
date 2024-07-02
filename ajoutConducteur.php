@@ -6,37 +6,27 @@ include 'config.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gender = $_POST['gender'];
     $lastname = $_POST['lastname'];
-    $firstname = $_POST['firstname'];
+    $uk_user_login= $_POST['firstname'];
     $address = $_POST['address'];
     $user_mobile = $_POST['user_mobile'];
     $email = $_POST['email'];
+    
+    // SQL query to insert data into llx_user table
+    $sql = "INSERT INTO llx_user (login,gender, lastname, firstname, address, user_mobile, email) 
+            VALUES ('$uk_user_login','$gender', '$lastname', '$uk_user_login', '$address', '$user_mobile', '$email')";
 
-    // Check if email already exists
-    $check_sql = "SELECT * FROM llx_user WHERE email = '$email'";
-    $result = $conn->query($check_sql);
-    if ($result->num_rows > 0) {
-        echo "Erreur : L'email '$email' existe déjà.";
+    if ($conn->query($sql) === TRUE) {
+        // Redirect to listConducteurs.php after successful insertion
+        header("Location: listConducteurs.php");
+        exit();
     } else {
-        // SQL query to insert data into llx_user table
-        $sql = "INSERT INTO llx_user (gender, lastname, firstname, address, user_mobile, email) 
-                VALUES ('$gender', '$lastname', '$firstname', '$address', '$user_mobile', '$email')";
-
-        if ($conn->query($sql) === TRUE) {
-            // Redirect to listConducteurs.php after successful insertion
-            header("Location: listConducteurs.php");
-            exit();
-        } else {
-            echo "Erreur : " . $sql . "<br>" . $conn->error;
-        }
+        echo "Erreur : " . $sql . "<br>" . $conn->error;
     }
 
     // Close the database connection
     $conn->close();
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
