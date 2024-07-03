@@ -117,7 +117,7 @@ include 'config.php';
                 <div class="order">
                     <div class="head">
                         <h3>Liste des transactions de carburant</h3>
-                        <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutConducteur.php" style="color: white;">Ajouter Conducteur</a></button>
+                        <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutTransaction.php" style="color: white;">Nouvelle transaction</a></button>
                     </div>
                     <table>
                         <thead>
