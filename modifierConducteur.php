@@ -1,43 +1,58 @@
 <?php
-// Inclure le fichier de connexion à la base de données
+// Include the database connection file
 include 'config.php';
 
-// Traiter les données du formulaire
+// Check if the id parameter is set
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    // SQL query to fetch driver details by id
+    $sql = "SELECT rowid, gender, lastname, firstname, address, user_mobile, email FROM llx_user WHERE rowid='$id'";
+    $result = $conn->query($sql);
+
+    // Check if a record is found
+    if ($result->num_rows > 0) {
+        $driver = $result->fetch_assoc();
+    } else {
+        echo "Conducteur non trouvé.";
+        exit();
+    }
+} else {
+    echo "ID non spécifié.";
+    exit();
+}
+
+// Process form data for updating driver details
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gender = $_POST['gender'];
     $lastname = $_POST['lastname'];
     $firstname = $_POST['firstname'];
-    $uk_user_login = $lastname . $firstname; // Combiner lastname et firstname pour créer le login
     $address = $_POST['address'];
     $user_mobile = $_POST['user_mobile'];
     $email = $_POST['email'];
-    
-    // Requête SQL pour vérifier l'existence de l'email
-    $check_sql = "SELECT * FROM llx_user WHERE email='$email'";
-    $check_result = $conn->query($check_sql);
 
-    if ($check_result->num_rows > 0) {
-        // Si l'email existe déjà, afficher un message d'erreur
-        echo "Erreur : L'email '$email' existe déjà.";
+    // SQL query to update driver details in llx_user table
+    $sql = "UPDATE llx_user SET 
+            gender='$gender', 
+            lastname='$lastname', 
+            firstname='$firstname', 
+            address='$address', 
+            user_mobile='$user_mobile', 
+            email='$email'
+            WHERE rowid='$id'";
+
+    if ($conn->query($sql) === TRUE) {
+        // Redirect to listConducteurs.php after successful update
+        header("Location: listConducteurs.php");
+        exit();
     } else {
-        // Si l'email n'existe pas, insérer les données dans la table llx_user
-        $sql = "INSERT INTO llx_user (login, gender, lastname, firstname, address, user_mobile, email, entity) 
-                VALUES ('$uk_user_login', '$gender', '$lastname', '$firstname', '$address', '$user_mobile', '$email', 2)";
-
-        if ($conn->query($sql) === TRUE) {
-            // Rediriger vers listConducteurs.php après une insertion réussie
-            header("Location: listConducteurs.php");
-            exit();
-        } else {
-            echo "Erreur : " . $sql . "<br>" . $conn->error;
-        }
+        echo "Erreur : " . $sql . "<br>" . $conn->error;
     }
 
-    // Fermer la connexion à la base de données
+    // Close the database connection
     $conn->close();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -147,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
-                            <a class="active" href="listConducteurs.php">List Conducteurs</a>
+                            <a class="active" href="listConducteurs.php">Modifier Conducteur</a>
                         </li>
                     </ul>
                 </div>
@@ -155,68 +170,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Ajouter Conducteur</h3>
+                        <h3>Modifier Conducteur</h3>
                     </div>
-                    <form id="addDriverForm" action="ajoutConducteur.php" method="POST">
+                    <form id="editDriverForm" action="modifierConducteur.php?id=<?php echo $driver['rowid']; ?>" method="POST">
                         <table>
                             <tbody>
                                 <tr>
-                                <td>
-                                        <label for="lastname">Nom:</label>
-                                        <input type="text" name="lastname" placeholder="Nom du conducteur" required>
-                                    </td>
-                                    
-                                </tr>
-                                <tr>
-                                <td>
-                                        <label for="firstname">Prénom:</label>
-                                        <input type="text" name="firstname" placeholder="Prénom du conducteur" required>
-                                    </td>
-                                
-                                </tr>
-                                <tr>
-                                <td>
+                                    <td>
                                         <label for="gender">Genre:</label>
-                                        <select  style=" padding: 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  
-    transition: border-color 0.3s, box-shadow 0.3s;
-    width: 200px;
-    height: 45px;" name="gender" required>
-                                            <option value="M">Masculin</option>
-                                            <option value="F">Féminin</option>
+                                        <select name="gender" required>
+                                            <option value="M" <?php if ($driver['gender'] == 'M') echo 'selected'; ?>>Masculin</option>
+                                            <option value="F" <?php if ($driver['gender'] == 'F') echo 'selected'; ?>>Féminin</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
+                                        <label for="lastname">Nom:</label>
+                                        <input type="text" name="lastname" value="<?php echo $driver['lastname']; ?>" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="firstname">Prénom:</label>
+                                        <input type="text" name="firstname" value="<?php echo $driver['firstname']; ?>" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <label for="address">Adresse:</label>
-                                        <input type="text" name="address" placeholder="Adresse du conducteur">
+                                        <input type="text" name="address" value="<?php echo $driver['address']; ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label for="user_mobile">Mobile:</label>
-                                        <input type="number" name="user_mobile" placeholder="Numéro de téléphone du conducteur" required>
+                                        <input type="number" name="user_mobile" value="<?php echo $driver['user_mobile']; ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label for="email">Email:</label>
-                                        <input  style=" padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    width: 350px;
-    height: 35px;"  type="email" name="email" placeholder="Email du conducteur" required>
+                                        <input type="email" name="email" value="<?php echo $driver['email']; ?>" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button style="padding: 10px 20px; width:190px; color: white;" type="submit">Ajouter Conducteur</button>
+                                        <button style="padding: 10px 20px; width:200px; color: white;" type="submit">Modifier Conducteur</button>
                                     </td>
                                 </tr>
                             </tbody>

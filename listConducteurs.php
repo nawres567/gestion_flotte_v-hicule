@@ -1,3 +1,8 @@
+<?php
+// Include the database connection file
+include 'config.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,19 +26,19 @@
         <ul class="side-menu top">
             <li>
                 <a href="dashbord.php">
-                    <i class='bx bxs-dashboard' ></i>
+                    <i class='bx bxs-dashboard'></i>
                     <span class="text">Dashboard</span>
                 </a>
             </li>
-            <li >
+            <li>
                 <a href="vehicule.php">
-                    <i class='bx bxs-car' ></i>
+                    <i class='bx bxs-car'></i>
                     <span class="text">Véhicules</span>
                 </a>
             </li>
             <li class="active">
                 <a href="listConducteurs.php">
-                    <i class='bx bxs-group' ></i>
+                    <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
                 </a>
             </li>
@@ -45,7 +50,7 @@
             </li>
             <li>
                 <a href="#">
-                    <i class='bx bxs-wrench' ></i>
+                    <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
             </li>
@@ -59,13 +64,13 @@
         <ul class="side-menu">
             <li>
                 <a href="#">
-                    <i class='bx bxs-cog' ></i>
+                    <i class='bx bxs-cog'></i>
                     <span class="text">Settings</span>
                 </a>
             </li>
             <li>
                 <a href="logout.php" class="logout">
-                    <i class='bx bxs-log-out-circle' ></i>
+                    <i class='bx bxs-log-out-circle'></i>
                     <span class="text">Logout</span>
                 </a>
             </li>
@@ -75,19 +80,16 @@
     <section id="content">
         <!-- NAVBAR -->
         <nav>
-            <i class='bx bx-menu' ></i>
+            <i class='bx bx-menu'></i>
             <a href="#" class="nav-link">Categories</a>
             <form action="#">
                 <div class="form-input">
-                    
-                    
                 </div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
             <label for="switch-mode" class="switch-mode"></label>
             <a href="#" class="notification">
-                <i class='bx bxs-bell' ></i>
-              
+                <i class='bx bxs-bell'></i>
             </a>
             <a href="#" class="profile">
                 <img src="img/people.webp">
@@ -115,28 +117,24 @@
                 <div class="order">
                     <div class="head">
                         <h3>Liste des conducteurs</h3>
-                       
-            
-                        <button class="btn-add-vehicle" id="btn-add-vehicle" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutConducteur.php" style="color: white;">Ajouter Conducteur</a></button>
+                        <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutConducteur.php" style="color: white;">Ajouter Conducteur</a></button>
                     </div>
                     <table>
                         <thead>
                             <tr>
                                 <th>Nom</th>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Prix</th>
-                                <th>Modèle</th>
-                               
+                                <th>Prénom</th>
+                                <th>Genre</th>
+                                <th>Adresse</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                              
                             </tr>
                         </thead>
                         <tbody>
                         <?php
-                        // Include the database connection file
-                        include 'config.php';
-
-                        // Select all vehicles from llx_product table
-                        $sql = "SELECT rowid, label, DATE(datec) AS datec, description, price, note FROM llx_product";
+                        // Select all drivers from llx_user table with entity=2
+                        $sql = "SELECT rowid, login, gender, lastname, firstname, address, user_mobile, email FROM llx_user WHERE entity=2";
                         $result = $conn->query($sql);
 
                         // Check if there are any records
@@ -144,23 +142,20 @@
                             // Output data of each row
                             while($row = $result->fetch_assoc()) {
                                 echo "<tr>";
-                                echo "<td>" . $row['label'] . "</td>";
-                                echo "<td>" . $row['datec'] . "</td>";
-                                echo "<td>" . $row['description'] . "</td>";
-                                echo "<td>" . $row['price'] . "</td>";
-                                echo "<td>" . $row['note'] . "</td>";
+                                echo "<td>" . $row['lastname'] . "</td>";
+                                echo "<td>" . $row['firstname'] . "</td>";
+                                echo "<td>" . $row['gender'] . "</td>";
+                                echo "<td>" . $row['address'] . "</td>";
+                                echo "<td>" . $row['user_mobile'] . "</td>";
+                                echo "<td>" . $row['email'] . "</td>";
                                 echo "<td>";
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: orange;'>    <a   style='color: white;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
-                               
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: red;'>
-                                <a style='color: white;' href='supprimerVéhicule.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a>
-                              </button>";
-                        
+                                echo "<button style='padding: 10px 20px; width:170px; background-color: orange;'> <a style='color: white;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
+                                echo "<button style='padding: 10px 20px; width:170px; background-color: red;'><a style='color: white;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a></button>";
                                 echo "</td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>Aucun véhicule trouvé.</td></tr>";
+                            echo "<tr><td colspan='7'>Aucun conducteur trouvé.</td></tr>";
                         }
 
                         // Close the database connection
@@ -176,9 +171,9 @@
     <!-- CONTENT -->
     <script>
     function confirmDelete() {
-        return confirm("Êtes-vous sûr de vouloir supprimer ce véhicule ?");
+        return confirm("Êtes-vous sûr de vouloir supprimer ce conducteur ?");
     }
-</script>
+    </script>
 
     <script src="script.js"></script>
 </body>
