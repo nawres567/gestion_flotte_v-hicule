@@ -4,6 +4,26 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+
+// Inclure le fichier de connexion à la base de données
+include 'config.php';
+
+// Requête SQL pour compter le nombre de conducteurs où entity=2
+$count_sql = "SELECT COUNT(*) as count FROM llx_user WHERE entity=2";
+$count_result = $conn->query($count_sql);
+$count_row = $count_result->fetch_assoc();
+$conducteurs_count = $count_row['count'];
+
+
+
+// Requête SQL pour compter le nombre de véhicules
+$count_sql_vehicules = "SELECT COUNT(*) as count FROM llx_product";
+$count_result_vehicules = $conn->query($count_sql_vehicules);
+$count_row_vehicules = $count_result_vehicules->fetch_assoc();
+$vehicules_count = $count_row_vehicules['count'];
+
+// Fermer la connexion à la base de données
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +40,6 @@ if (!isset($_SESSION['user_id'])) {
 	<title>AdminHub</title>
 </head>
 <body>
-
 
 	<!-- SIDEBAR -->
 	<section id="sidebar">
@@ -42,27 +61,24 @@ if (!isset($_SESSION['user_id'])) {
 				</a>
 			</li>
 			<li>
-				
-            <a href="listConducteurs.php">
+				<a href="listConducteurs.php">
 					<i class='bx bxs-group' ></i>
 					<span class="text">Conducteurs</span>
 				</a>
 			</li>
 			<li>
-            <a href="#">
+            <a href="carburant.php">
                 <i class='bx bxs-gas-pump'></i>
                 <span class="text">Suivi du carburant </span>
              </a>
 			</li>
 			<li>
-
             <a href="#">
 					<i class='bx bxs-wrench' ></i>
 					<span class="text">Maintenance</span>
 				</a>
 			</li>
             <li>
-
             <a href="#">
                 <i class='bx bxs-map'></i>
                 <span class="text">Localisation</span>
@@ -85,8 +101,6 @@ if (!isset($_SESSION['user_id'])) {
 		</ul>
 	</section>
 	<!-- SIDEBAR -->
-
-
 
 	<!-- CONTENT -->
 	<section id="content">
@@ -127,21 +141,20 @@ if (!isset($_SESSION['user_id'])) {
 						</li>
 					</ul>
 				</div>
-				
 			</div>
 
 			<ul class="box-info">
 				<li>
 					<i class='bx bxs-car' ></i>
 					<span class="text">
-						<h3>1020</h3>
+					<h3><?php echo $vehicules_count; ?></h3>
 						<p>Véhicules</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-group' ></i>
 					<span class="text">
-						<h3>2834</h3>
+						<h3><?php echo $conducteurs_count; ?></h3>
 						<p>Conducteurs</p>
 					</span>
 				</li>
@@ -153,15 +166,11 @@ if (!isset($_SESSION['user_id'])) {
 					</span>
 				</li>
 			</ul>
-
-
-			
 		</main>
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
 	
-
 	<script src="script.js"></script>
 </body>
 </html>

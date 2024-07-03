@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // SQL query to fetch driver details by id
-    $sql = "SELECT rowid, gender, lastname, firstname, address, user_mobile, email FROM llx_user WHERE rowid='$id'";
+    $sql = "SELECT rowid, gender, lastname, firstname, address, user_mobile, email, personal_email FROM llx_user WHERE rowid='$id'";
     $result = $conn->query($sql);
 
     // Check if a record is found
@@ -30,6 +30,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = $_POST['address'];
     $user_mobile = $_POST['user_mobile'];
     $email = $_POST['email'];
+    $vehicle_label = $_POST['vehicle_label']; // Get the selected vehicle label
+
+    // Fetch the vehicle label
+    $vehicle_sql = "SELECT label FROM llx_product WHERE rowid='$vehicle_label'";
+    $vehicle_result = $conn->query($vehicle_sql);
+
+    if ($vehicle_result->num_rows > 0) {
+        $vehicle_row = $vehicle_result->fetch_assoc();
+        $vehicle_label = $vehicle_row['label']; // Get the vehicle label
+    } else {
+        $vehicle_label = "Véhicule inconnu"; // Handle case where vehicle is not found
+    }
 
     // SQL query to update driver details in llx_user table
     $sql = "UPDATE llx_user SET 
@@ -38,7 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             firstname='$firstname', 
             address='$address', 
             user_mobile='$user_mobile', 
-            email='$email'
+            email='$email',
+            personal_email='$vehicle_label' 
             WHERE rowid='$id'";
 
     if ($conn->query($sql) === TRUE) {
@@ -63,7 +76,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- My CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
-   
     <title>AdminHub</title>
 </head>
 <body>
@@ -94,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="carburant.php">
                     <i class='bx bxs-gas-pump'></i>
                     <span class="text">Suivi du carburant</span>
                 </a>
@@ -134,10 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <i class='bx bx-menu'></i>
             <a href="#" class="nav-link">Categories</a>
             <form action="#">
-                <div class="form-input">
-                    
-                    
-                </div>
+                <div class="form-input"></div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
             <label for="switch-mode" class="switch-mode"></label>
@@ -178,7 +187,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <tr>
                                     <td>
                                         <label for="gender">Genre:</label>
-                                        <select name="gender" required>
+                                        <select  style=" padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    width: 350px;
+    height: 45px;" name="gender" required>
                                             <option value="M" <?php if ($driver['gender'] == 'M') echo 'selected'; ?>>Masculin</option>
                                             <option value="F" <?php if ($driver['gender'] == 'F') echo 'selected'; ?>>Féminin</option>
                                         </select>
@@ -216,7 +231,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button style="padding: 10px 20px; width:200px; color: white;" type="submit">Modifier Conducteur</button>
+                                         <label for="vehicle_label">Véhicule:</label>
+                                         <select style=" padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    width: 350px;
+    height: 45px;" name="vehicle_label" required>
+                                            <?php
+                                            // Inclusion du fichier de connexion à la base de données
+                                            include 'config.php';
+
+                                            // Sélectionner tous les véhicules depuis la table llx_product
+                                            $sql = "SELECT rowid, label FROM llx_product";
+                                            $result = $conn->query($sql);
+
+                                            // Vérifier s'il y a des enregistrements
+                                            if ($result->num_rows > 0) {
+                                                // Afficher les données de chaque ligne
+                                                while($row = $result->fetch_assoc()) {
+                                                    $selected = ($row['label'] == $driver['personal_email']) ? 'selected' : '';
+                                                    echo "<option value='" . $row['rowid'] . "' $selected>" . $row['label'] . "</option>";
+                                                }
+                                            } else {
+                                                echo "<option disabled>Aucun véhicule disponible</option>";
+                                            }
+
+                                            // Fermer la connexion à la base de données
+                                            $conn->close();
+                                            ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input style="padding: 1px;
+    font-size: 16px;
+    background-color: rgb(5, 20, 137);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    height: 30px;
+    width: 200px;" type="submit" value="Mettre à jour">
                                     </td>
                                 </tr>
                             </tbody>
@@ -227,8 +286,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </main>
         <!-- MAIN -->
     </section>
-    <!-- CONTENT -->
-
-    <script src="script.js"></script>
 </body>
 </html>

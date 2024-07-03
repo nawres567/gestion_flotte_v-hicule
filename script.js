@@ -105,3 +105,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
         modal.style.display = "none";
     }
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const switchMode = document.getElementById('switch-mode');
+
+    switchMode.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    });
+});

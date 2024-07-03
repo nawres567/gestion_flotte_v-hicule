@@ -36,13 +36,13 @@ include 'config.php';
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li class="active">
+            <li >
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="carburant.php">
                     <i class='bx bxs-gas-pump'></i>
                     <span class="text">Suivi du carburant</span>
@@ -101,10 +101,10 @@ include 'config.php';
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Conducteurs</h1>
+                    <h1>Carburants</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">Conducteurs</a>
+                            <a href="#">transactions de carburant</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
@@ -116,7 +116,7 @@ include 'config.php';
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Liste des conducteurs</h3>
+                        <h3>Liste des transactions de carburant</h3>
                         <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutConducteur.php" style="color: white;">Ajouter Conducteur</a></button>
                     </div>
                     <table>

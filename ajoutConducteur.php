@@ -11,7 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = $_POST['address'];
     $user_mobile = $_POST['user_mobile'];
     $email = $_POST['email'];
-    
+    $vehicle_label = $_POST['vehicle_label']; // Récupérer le label du véhicule sélectionné
+
     // Requête SQL pour vérifier l'existence de l'email
     $check_sql = "SELECT * FROM llx_user WHERE email='$email'";
     $check_result = $conn->query($check_sql);
@@ -20,9 +21,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Si l'email existe déjà, afficher un message d'erreur
         echo "Erreur : L'email '$email' existe déjà.";
     } else {
-        // Si l'email n'existe pas, insérer les données dans la table llx_user
-        $sql = "INSERT INTO llx_user (login, gender, lastname, firstname, address, user_mobile, email, entity) 
-                VALUES ('$uk_user_login', '$gender', '$lastname', '$firstname', '$address', '$user_mobile', '$email', 2)";
+        // Récupérer le label du véhicule sélectionné
+        $vehicle_sql = "SELECT label FROM llx_product WHERE rowid='$vehicle_label'";
+        $vehicle_result = $conn->query($vehicle_sql);
+
+        if ($vehicle_result->num_rows > 0) {
+            $vehicle_row = $vehicle_result->fetch_assoc();
+            $vehicle_label = $vehicle_row['label']; // Récupérer le label du véhicule
+        } else {
+            $vehicle_label = "Véhicule inconnu"; // Gérer le cas où le véhicule n'est pas trouvé
+        }
+
+        // Insérer les données dans la table llx_user
+        $sql = "INSERT INTO llx_user (login, gender, lastname, firstname, address, user_mobile, email, entity, personal_email) 
+                VALUES ('$uk_user_login', '$gender', '$lastname', '$firstname', '$address', '$user_mobile', '$email', 2, '$vehicle_label')";
 
         if ($conn->query($sql) === TRUE) {
             // Rediriger vers listConducteurs.php après une insertion réussie
@@ -37,6 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -79,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="carburant.php">
                     <i class='bx bxs-gas-pump'></i>
                     <span class="text">Suivi du carburant</span>
                 </a>
@@ -184,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
     transition: border-color 0.3s, box-shadow 0.3s;
     width: 200px;
-    height: 45px;" name="gender" required>
+    height: 40px;" name="gender" required>
                                             <option value="M">Masculin</option>
                                             <option value="F">Féminin</option>
                                         </select>
@@ -214,6 +228,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     height: 35px;"  type="email" name="email" placeholder="Email du conducteur" required>
                                     </td>
                                 </tr>
+                               <!-- Partie du formulaire pour sélectionner le véhicule -->
+<tr>
+    <td>
+    <label for="vehicle_label">Véhicule:</label>
+        <select  style=" padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    width: 350px;
+    height: 45px;" name="vehicle_label" required>
+            <?php
+            // Inclusion du fichier de connexion à la base de données
+            include 'config.php';
+
+            // Sélectionner tous les véhicules depuis la table llx_product
+            $sql = "SELECT rowid, label FROM llx_product";
+            $result = $conn->query($sql);
+
+            // Vérifier s'il y a des enregistrements
+            if ($result->num_rows > 0) {
+                // Afficher les données de chaque ligne
+                while($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
+                }
+            } else {
+                echo "<option disabled>Aucun véhicule disponible</option>";
+            }
+
+            // Fermer la connexion à la base de données
+            $conn->close();
+            ?>
+        </select>
+    </td>
+</tr>
+
+
                                 <tr>
                                     <td>
                                         <button style="padding: 10px 20px; width:190px; color: white;" type="submit">Ajouter Conducteur</button>
