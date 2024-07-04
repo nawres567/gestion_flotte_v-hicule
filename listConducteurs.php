@@ -151,8 +151,8 @@ include 'config.php';
                                 echo "<td>" . $row['email'] . "</td>";
                                 echo "<td>" . $row['personal_email'] . "</td>";
                                 echo "<td>";
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: orange;'> <a style='color: white;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: red;'><a style='color: white;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a></button>";
+                                echo "<button style='padding: 10px 20px; width:120px; background-color: orange;'> <a style='color: white;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
+                                echo "<button style='padding: 10px 20px; width:120px; background-color: red;'><a style='color: white;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a></button>";
                                 echo "</td>";
                                 echo "</tr>";
                             }

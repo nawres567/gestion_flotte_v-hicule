@@ -13,7 +13,7 @@ include 'config.php';
     <!-- My CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
    
-    <title>AdminHub</title>
+    <title>AutoFlotte</title>
 </head>
 <body>
 
@@ -36,7 +36,7 @@ include 'config.php';
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li >
+            <li>
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
@@ -101,14 +101,14 @@ include 'config.php';
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Carburants</h1>
+                    <h1>Transactions du Carburant</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">transactions de carburant</a>
+                            <a href="#">Transactions de Carburant</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
-                            <a class="active" href="#">Accueil</a>
+                            <a class="active" href="#">Liste des Transactions</a>
                         </li>
                     </ul>
                 </div>
@@ -116,53 +116,66 @@ include 'config.php';
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Liste des transactions de carburant</h3>
-                        <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutTransaction.php" style="color: white;">Nouvelle transaction</a></button>
+                        <h3>Liste des Transactions du Carburant</h3>
+                        <button class="btn-add-transaction" style="padding: 10px 20px; width:190px; color: white;"><a href="ajoutTransaction.php" style="color: white;">Ajouter Transaction</a></button>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Nom</th>
-                                <th>Prénom</th>
-                                <th>Genre</th>
-                                <th>Adresse</th>
-                                <th>Mobile</th>
-                                <th>Email</th>
-                                <th>Véhicule</th>
-                              
+                                <th>Nom véhicule</th>
+                                
+                                <th>Date de Transaction</th>
+                                <th>Montant</th>
+                                <th>Quantité de Carburant</th>
+                                <th>Kilométrage</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php
-                        // Select all drivers from llx_user table with entity=2
-                        $sql = "SELECT rowid, login, gender, lastname, firstname, address, user_mobile, email,personal_email FROM llx_user WHERE entity=2";
-                        $result = $conn->query($sql);
+                            <?php
+                            // Include the database connection file
+                            include 'config.php';
 
-                        // Check if there are any records
-                        if ($result->num_rows > 0) {
-                            // Output data of each row
-                            while($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row['lastname'] . "</td>";
-                                echo "<td>" . $row['firstname'] . "</td>";
-                                echo "<td>" . $row['gender'] . "</td>";
-                                echo "<td>" . $row['address'] . "</td>";
-                                echo "<td>" . $row['user_mobile'] . "</td>";
-                                echo "<td>" . $row['email'] . "</td>";
-                                echo "<td>" . $row['personal_email'] . "</td>";
-                                echo "<td>";
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: orange;'> <a style='color: white;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: red;'><a style='color: white;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a></button>";
-                                echo "</td>";
-                                echo "</tr>";
+                            // Select all transactions from llx_product_fournisseur_price table
+                            $sql = "SELECT pf.rowid AS pf_rowid, p.label AS vehicle_name, pf.price, pf.quantity, pf.unitprice, DATE(pf.datec) AS transaction_date 
+        FROM llx_product_fournisseur_price pf 
+        INNER JOIN llx_product p ON pf.fk_product = p.rowid";
+$result = $conn->query($sql);
+?>
+
+
+    
+    
+        <?php
+        // Check if there are any records
+        if ($result->num_rows > 0) {
+            // Output data of each row
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($row['vehicle_name']) . "</td>";
+                //echo "<td>" . htmlspecialchars($row['pf_rowid']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['transaction_date']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['price']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['quantity']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['unitprice']) . "</td>";
+                echo "<td>";
+                echo "<button style='padding: 10px 20px; width:120px; margin-right: 10px; background-color: orange;'>
+                        <a style='color: white;' href='modifierTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action'>Modifier</a>
+                      </button>";
+                      echo "<button style='padding: 10px 20px; width:120px; background-color: red;'>
+                      <a style='color: white;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a>
+                    </button>";
+
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='6'>Aucune transaction trouvée.</td></tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='7'>Aucun conducteur trouvé.</td></tr>";
-                        }
 
-                        // Close the database connection
-                        $conn->close();
-                        ?>
+                            // Close the database connection
+                            $conn->close();
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -173,7 +186,7 @@ include 'config.php';
     <!-- CONTENT -->
     <script>
     function confirmDelete() {
-        return confirm("Êtes-vous sûr de vouloir supprimer ce conducteur ?");
+        return confirm("Êtes-vous sûr de vouloir supprimer cette transaction ?");
     }
     </script>
 

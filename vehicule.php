@@ -150,9 +150,9 @@
                                 echo "<td>" . $row['price'] . "</td>";
                                 echo "<td>" . $row['note'] . "</td>";
                                 echo "<td>";
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: orange;'>    <a   style='color: white;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
+                                echo "<button style='padding: 10px 20px; width:120px; background-color: orange;'>    <a   style='color: white;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
                                
-                                echo "<button style='padding: 10px 20px; width:170px; background-color: red;'>
+                                echo "<button style='padding: 10px 20px; width:120px; background-color: red;'>
                                 <a style='color: white;' href='supprimerVéhicule.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a>
                               </button>";
                         
