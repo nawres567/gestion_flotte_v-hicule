@@ -148,14 +148,14 @@ $conn->close();
 					<i class='bx bxs-car' ></i>
 					<span class="text">
 					<h3><?php echo $vehicules_count; ?></h3>
-						<p>Véhicules</p>
+						<p><a href="vehicule.php" >Véhicules</a></p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-group' ></i>
 					<span class="text">
 						<h3><?php echo $conducteurs_count; ?></h3>
-						<p>Conducteurs</p>
+						<p><a href="listConducteurs.php" >Conducteurs</a></p>
 					</span>
 				</li>
 				<li>

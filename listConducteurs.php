@@ -147,14 +147,15 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row['firstname'] . "</td>";
         echo "<td>" . $row['user_mobile'] . "</td>";
         echo "<td>" . $row['email'] . "</td>";
-        echo "<td><img src='uploads/" . $row['photo'] . "' style='width: 100px; height: auto;'></td>"; // Ajoutez cette ligne pour afficher la photo
+        echo "<td><img src='uploads/" . $row['photo'] . "' style='width: 50px; height: 50px; border-radius: 50%; object-fit: cover;'></td>";
+        // Ajoutez cette ligne pour afficher la photo
         echo "<td>" . $row['personal_email'] . "</td>";
         echo "<td>";
-        echo "<button style='padding: 10px 10px; width:40px;background-color:#AAAAAA'> <a style='color:jaune;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a> </button> ";
+        echo " <a style='color:jaune;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a>  ";
         
-        echo "<button style='padding: 10px 10px; width:40px;background-color:#AAAAAA'> <a style='color: red;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a></button>";
+        echo " <a style='color: red;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
         echo "<span style='margin: 0 3px;'></span>"; 
-        echo "<button style='padding: 10px 10px; width:40px;background-color:#AAAAAA '> <a style='color: green;' href='detailsConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a></button>";
+        echo " <a style='color: green;' href='detailsConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a>";
         echo "</td>";
         echo "</tr>";
     }

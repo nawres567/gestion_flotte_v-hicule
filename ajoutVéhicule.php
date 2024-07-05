@@ -4,31 +4,64 @@ include 'config.php';
 
 // Process form data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupérer les données du formulaire
     $vehicle_name = $_POST['vehicle_name'];
     $vehicle_year = $_POST['vehicle_year'];
     $vehicle_description = $_POST['vehicle_description'];
     $vehicle_price = $_POST['vehicle_price'];
     $vehicle_model = $_POST['vehicle_model'];
 
-    // Generate a unique reference
-    $ref = uniqid('VEH', true); // Example: Generates a unique ID prefixed with 'VEH'
+    // Chemin de fichier pour la photo du véhicule
+    $target_file_photo = '';
+    if (isset($_FILES['vehicle_photo']) && $_FILES['vehicle_photo']['error'] == UPLOAD_ERR_OK) {
+        $photo = basename($_FILES['vehicle_photo']['name']);
+        $target_dir = "uploads/";
+        $target_file_photo = $target_dir . $photo;
+        if (!move_uploaded_file($_FILES['vehicle_photo']['tmp_name'], $target_file_photo)) {
+            echo "Erreur lors du téléchargement de la photo.";
+            exit();
+        }
+    }
 
-    // SQL query to insert data into llx_product table
-    $sql = "INSERT INTO llx_product (ref, label, datec, price, note, description) 
-            VALUES ('$ref', '$vehicle_name', '$vehicle_year', '$vehicle_price', '$vehicle_model', '$vehicle_description')";
+    // Gestion des fichiers pour les documents du véhicule
+    $vehicle_documents = [];
+    foreach ($_FILES['vehicle_documents']['tmp_name'] as $key => $tmp_name) {
+        $file_name = $_FILES['vehicle_documents']['name'][$key];
+        $file_tmp = $_FILES['vehicle_documents']['tmp_name'][$key];
+        $file_type = $_FILES['vehicle_documents']['type'][$key];
+        $file_size = $_FILES['vehicle_documents']['size'][$key];
+        $file_error = $_FILES['vehicle_documents']['error'][$key];
+
+        $target_file_doc = $target_dir . basename($file_name);
+        if (!move_uploaded_file($file_tmp, $target_file_doc)) {
+            echo "Erreur lors du téléchargement des documents.";
+            exit();
+        }
+        $vehicle_documents[] = $target_file_doc;
+    }
+
+    // Générer une référence unique
+    $ref = uniqid('VEH', true);
+
+    // Requête SQL pour insérer les données dans la table llx_product
+    $sql = "INSERT INTO llx_product (ref, label, datec, price, note, description, lifo, fifo) 
+            VALUES ('$ref', '$vehicle_name', '$vehicle_year', '$vehicle_price', '$vehicle_model', '$vehicle_description', '$target_file_photo', '" . implode(',', $vehicle_documents) . "')";
 
     if ($conn->query($sql) === TRUE) {
-        // Redirect to vehicule.php after successful insertion
+        // Redirection vers vehicule.php après insertion réussie
         header("Location: vehicule.php");
         exit();
     } else {
         echo "Erreur : " . $sql . "<br>" . $conn->error;
     }
 
-    // Close the database connection
+    // Fermer la connexion à la base de données
     $conn->close();
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -182,6 +215,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <input type="text" name="vehicle_model" placeholder="Modèle du véhicule" required>
                                     </td>
                                 </tr>
+                                <tr>
+    <td>
+        <label for="vehicle_photo">Photo du véhicule:</label>
+        <input type="file" name="vehicle_photo" accept="image/*">
+    </td>
+</tr>
+<tr>
+    <td>
+        <label for="vehicle_documents">Documents:</label>
+        <input type="file" name="vehicle_documents[]" multiple accept=".pdf,.doc,.docx">
+    </td>
+</tr>
+
                                 <tr>
                                     <td>
                                         <button style="padding: 10px 20px; width:170px; color: white;" type="submit">Ajouter Véhicule</button>

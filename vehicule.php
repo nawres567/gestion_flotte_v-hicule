@@ -8,7 +8,7 @@
     <!-- My CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
    
-    <title>AdminHub</title>
+    <title>AutoFlotte</title>
 </head>
 <body>
 
@@ -147,15 +147,16 @@
                                 echo "<td>" . $row['label'] . "</td>";
                                 echo "<td>" . $row['datec'] . "</td>";
                                 echo "<td>" . $row['description'] . "</td>";
-                                echo "<td>" . $row['price'] . "</td>";
+                                echo "<td>" . number_format($row['price'], 2, ',', ' ') . "</td>";
+
                                 echo "<td>" . $row['note'] . "</td>";
                                 echo "<td>";
 
-                                echo "<button style='padding: 10px 10px; width:50px; background-color:#AAAAAA'> <a style='color: jaune;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a> </button> ";
+                                echo "<a style='color: jaune;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a> ";
         
-                                echo "<button style='padding: 10px 10px; width:50px; background-color:#AAAAAA'> <a style='color: red;' href='supprimerVéhicule.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a></button>";
+                                echo " <a style='color: red;' href='supprimerVéhicule.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
                                 echo "<span style='margin: 0 3px;'></span>"; 
-                                echo "<button style='padding: 10px 10px; width:50px; background-color:#AAAAAA'> <a style='color: green;' href='detailsVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a></button>";
+                                echo " <a style='color: green;' href='detailsVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a>";
 
 
 

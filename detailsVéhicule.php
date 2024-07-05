@@ -1,22 +1,3 @@
-<?php
-// Inclure le fichier de connexion à la base de données
-include 'config.php';
-
-// Vérifier si l'ID du conducteur est défini dans l'URL
-if(isset($_GET['id'])) {
-    $driver_id = $_GET['id'];
-
-    // Requête SQL pour récupérer les détails du conducteur et du véhicule lié
-    $sql = "SELECT *, p.datec AS vehicle_year, p.description AS vehicle_description, p.price AS vehicle_price, p.note AS vehicle_model 
-            FROM llx_user u
-            LEFT JOIN llx_product p ON u.personal_email = p.label
-            WHERE u.rowid='$driver_id'";
-
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,13 +42,13 @@ if(isset($_GET['id'])) {
                     <span class="text">Dashboard</span>
                 </a>
             </li>
-            <li>
+            <li class="active" >
                 <a href="vehicule.php">
                     <i class='bx bxs-car'></i>
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li class="active">
+            <li >
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
@@ -133,61 +114,26 @@ if(isset($_GET['id'])) {
         <main> 
             <div class="head-title">
                 <div class="left">
-                    <h1>Détails du Conducteur</h1>
+                    <h1>Détails du Véhicule</h1>
                     <ul class="breadcrumb">
-                        <li><a href="#">Conducteurs</a></li>
+                        <li><a href="#">Véhicules</a></li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li><a class="active" href="listConducteurs.php">Détails</a></li>
                     </ul>
                 </div>
             </div>
-            <div >
-                <div >
-                    
-                    
-                        <ul class="list-group list-group-flush">
-                        <img style='width: 100px; height: 50px; border-radius: 50%; ' src="uploads/<?php echo isset($row['photo']) ? $row['photo'] : 'default.jpg'; ?>" alt="Photo du Conducteur">
-                            <li class="list-group-item"><strong>Nom:</strong> <?php echo $row['lastname']; ?></li>
-                            <li class="list-group-item"><strong>Prénom:</strong> <?php echo $row['firstname']; ?></li>
-                            <li class="list-group-item"><strong>Genre:</strong> <?php echo ($row['gender'] == 'M') ? 'Masculin' : 'Féminin'; ?></li>
-                            <li class="list-group-item"><strong>Date de Naissance:</strong> <?php echo isset($row['birth']) ? $row['birth'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Adresse:</strong> <?php echo isset($row['address']) ? $row['address'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Ville:</strong> <?php echo isset($row['lang']) ? $row['lang'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Code Postal:</strong> <?php echo isset($row['zip']) ? $row['zip'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Département:</strong> <?php echo isset($row['signature']) ? $row['signature'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Poste:</strong> <?php echo isset($row['job']) ? $row['job'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Mobile:</strong> <?php echo isset($row['user_mobile']) ? $row['user_mobile'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Email:</strong> <?php echo isset($row['email']) ? $row['email'] : 'N/A'; ?></li>
-                        </ul>
-                 
-    </div>
-    
-                 
-                        <h5 class="card-title">Détails du Véhicule:</h5>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Date:</strong> <?php echo isset($row['vehicle_year']) ? date('Y-m-d', strtotime($row['vehicle_year'])) : 'N/A'; ?></li>
-
-                            <li class="list-group-item"><strong>Description:</strong> <?php echo isset($row['vehicle_description']) ? $row['vehicle_description'] : 'N/A'; ?></li>
-                            <li class="list-group-item"><strong>Prix:</strong> <?php echo isset($row['vehicle_price']) ? number_format($row['vehicle_price'], 2, ',', ' ') : 'N/A'; ?></li>
-
-                            <li class="list-group-item"><strong>Modèle:</strong> <?php echo isset($row['vehicle_model']) ? $row['vehicle_model'] : 'N/A'; ?></li>
-                        </ul>
+            <div class="details-container">
+                <div class="card details-card">
+                    <div class="card-body">
+                    <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                    </ul>
                     </div>
+                </div>
+                </div>
                 </div>
             </div>
         </main>
     </section>
 </body>
 </html>
-
-<?php
-    } else {
-        echo "Aucun conducteur trouvé avec cet identifiant.";
-    }
-} else {
-    echo "Identifiant du conducteur non spécifié.";
-}
-
-// Fermer la connexion à la base de données
-$conn->close();
-?>

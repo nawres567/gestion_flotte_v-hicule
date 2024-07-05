@@ -163,7 +163,7 @@ $result = $conn->query($sql);
                 //         <a style='color: white;' href='modifierTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action'>Modifier</a>
                 //       </button>";
 
-                echo "<button style='padding: 10px 10px; width:50px; background-color: #AAAAAA;'> <a style='color: red;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a></button>";
+                echo " <a style='color: red;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
 
 
 
