@@ -117,7 +117,7 @@ include 'config.php';
                 <div class="order">
                     <div class="head">
                         <h3>Liste des Transactions du Carburant</h3>
-                        <button class="btn-add-transaction" style="padding: 10px 20px; width:190px; color: white;"><a href="ajoutTransaction.php" style="color: white;">Ajouter Transaction</a></button>
+                        <button class="btn-add-transaction" style="padding: 10px 20px; width:190px; color: white;background-color: #007bff"><a href="ajoutTransaction.php" style="color: white;">Ajouter Transaction</a></button>
                     </div>
                     <table>
                         <thead>
@@ -159,12 +159,17 @@ $result = $conn->query($sql);
                 echo "<td>" . htmlspecialchars($row['quantity']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['unitprice']) . "</td>";
                 echo "<td>";
-                echo "<button style='padding: 10px 20px; width:120px; margin-right: 10px; background-color: orange;'>
-                        <a style='color: white;' href='modifierTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action'>Modifier</a>
-                      </button>";
-                      echo "<button style='padding: 10px 20px; width:120px; background-color: red;'>
-                      <a style='color: white;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a>
-                    </button>";
+                // echo "<button style='padding: 10px 20px; width:120px; margin-right: 10px; background-color: orange;'>
+                //         <a style='color: white;' href='modifierTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action'>Modifier</a>
+                //       </button>";
+
+                echo "<button style='padding: 10px 10px; width:50px; background-color: #AAAAAA;'> <a style='color: red;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a></button>";
+
+
+
+                    //   echo "<button style='padding: 10px 20px; width:120px; background-color: red;'>
+                    //   <a style='color: white;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a>
+                    // </button>";
 
                                     echo "</td>";
                                     echo "</tr>";

@@ -117,53 +117,57 @@ include 'config.php';
                 <div class="order">
                     <div class="head">
                         <h3>Liste des conducteurs</h3>
-                        <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;"><a href="ajoutConducteur.php" style="color: white;">Ajouter Conducteur</a></button>
+                        <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;background-color:#007bff;"><a href="ajoutConducteur.php" style="color: white;">Ajouter Conducteur</a></button>
                     </div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Prénom</th>
-                                <th>Genre</th>
-                                <th>Adresse</th>
-                                <th>Mobile</th>
-                                <th>Email</th>
-                                <th>Véhicule</th>
-                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                        // Select all drivers from llx_user table with entity=2
-                        $sql = "SELECT rowid, login, gender, lastname, firstname, address, user_mobile, email,personal_email FROM llx_user WHERE entity=2";
-                        $result = $conn->query($sql);
+                     <!-- Supprimez la colonne Genre et Adresse -->
+<thead>
+    <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Mobile</th>
+        <th>Email</th>
+        <th>Image</th> <!-- Ajoutez cette ligne pour la colonne de la photo -->
+        <th>Véhicule</th>
+        <!-- Réorganisez selon votre besoin -->
+    </tr>
+</thead>
+<tbody>
+<?php
+// Sélectionnez tous les conducteurs depuis la table llx_user avec entity=2
+$sql = "SELECT rowid, login, lastname, firstname, user_mobile, email, photo, personal_email FROM llx_user WHERE entity=2";
+$result = $conn->query($sql);
 
-                        // Check if there are any records
-                        if ($result->num_rows > 0) {
-                            // Output data of each row
-                            while($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row['lastname'] . "</td>";
-                                echo "<td>" . $row['firstname'] . "</td>";
-                                echo "<td>" . $row['gender'] . "</td>";
-                                echo "<td>" . $row['address'] . "</td>";
-                                echo "<td>" . $row['user_mobile'] . "</td>";
-                                echo "<td>" . $row['email'] . "</td>";
-                                echo "<td>" . $row['personal_email'] . "</td>";
-                                echo "<td>";
-                                echo "<button style='padding: 10px 20px; width:120px; background-color: orange;'> <a style='color: white;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
-                                echo "<button style='padding: 10px 20px; width:120px; background-color: red;'><a style='color: white;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a></button>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='7'>Aucun conducteur trouvé.</td></tr>";
-                        }
+// Vérifiez s'il y a des enregistrements
+if ($result->num_rows > 0) {
+    // Affichez les données de chaque ligne
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . $row['lastname'] . "</td>";
+        echo "<td>" . $row['firstname'] . "</td>";
+        echo "<td>" . $row['user_mobile'] . "</td>";
+        echo "<td>" . $row['email'] . "</td>";
+        echo "<td><img src='uploads/" . $row['photo'] . "' style='width: 100px; height: auto;'></td>"; // Ajoutez cette ligne pour afficher la photo
+        echo "<td>" . $row['personal_email'] . "</td>";
+        echo "<td>";
+        echo "<button style='padding: 10px 10px; width:40px;background-color:#AAAAAA'> <a style='color:jaune;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a> </button> ";
+        
+        echo "<button style='padding: 10px 10px; width:40px;background-color:#AAAAAA'> <a style='color: red;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a></button>";
+        echo "<span style='margin: 0 3px;'></span>"; 
+        echo "<button style='padding: 10px 10px; width:40px;background-color:#AAAAAA '> <a style='color: green;' href='detailsConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a></button>";
+        echo "</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td colspan='5'>Aucun conducteur trouvé.</td></tr>";
+}
 
-                        // Close the database connection
-                        $conn->close();
-                        ?>
-                        </tbody>
+// Fermez la connexion à la base de données
+$conn->close();
+?>
+</tbody>
+  
+                        
                     </table>
                 </div>
             </div>

@@ -117,7 +117,7 @@
                         <h3>Liste des véhicules</h3>
                        
             
-                        <button class="btn-add-vehicle" id="btn-add-vehicle" style="padding: 10px 20px; width:170px; color: white;"><a href="ajoutVéhicule.php" style="color: white;">Ajouter Véhicule</a></button>
+                        <button class="btn-add-vehicle" id="btn-add-vehicle" style="padding: 10px 20px; width:170px; color: white;background-color:#007bff;"><a href="ajoutVéhicule.php" style="color: white;">Ajouter Véhicule</a></button>
                     </div>
                     <table>
                         <thead>
@@ -150,11 +150,16 @@
                                 echo "<td>" . $row['price'] . "</td>";
                                 echo "<td>" . $row['note'] . "</td>";
                                 echo "<td>";
-                                echo "<button style='padding: 10px 20px; width:120px; background-color: orange;'>    <a   style='color: white;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'>Modifier</a> </button> ";
-                               
-                                echo "<button style='padding: 10px 20px; width:120px; background-color: red;'>
-                                <a style='color: white;' href='supprimerVéhicule.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a>
-                              </button>";
+
+                                echo "<button style='padding: 10px 10px; width:50px; background-color:#AAAAAA'> <a style='color: jaune;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a> </button> ";
+        
+                                echo "<button style='padding: 10px 10px; width:50px; background-color:#AAAAAA'> <a style='color: red;' href='supprimerVéhicule.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a></button>";
+                                echo "<span style='margin: 0 3px;'></span>"; 
+                                echo "<button style='padding: 10px 10px; width:50px; background-color:#AAAAAA'> <a style='color: green;' href='detailsVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a></button>";
+
+
+
+                                
                         
                                 echo "</td>";
                                 echo "</tr>";

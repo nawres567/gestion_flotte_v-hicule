@@ -6,15 +6,22 @@ include 'config.php';
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
 
-    // SQL query to delete a vehicle by ID from llx_product table
-    $sql = "DELETE FROM llx_product WHERE rowid=$id";
+    // First delete related entries in llx_product_fournisseur_price
+    $delete_prices_sql = "DELETE FROM llx_product_fournisseur_price WHERE fk_product = $id";
+    
+    if ($conn->query($delete_prices_sql) === TRUE) {
+        // Now delete the vehicle from llx_product table
+        $delete_vehicle_sql = "DELETE FROM llx_product WHERE rowid = $id";
 
-    if ($conn->query($sql) === TRUE) {
-        // Redirect to vehicule.php after successful deletion
-        header("Location: vehicule.php");
-        exit();
+        if ($conn->query($delete_vehicle_sql) === TRUE) {
+            // Redirect to vehicule.php after successful deletion
+            header("Location: vehicule.php");
+            exit();
+        } else {
+            echo "Erreur lors de la suppression du véhicule : " . $conn->error;
+        }
     } else {
-        echo "Erreur : " . $sql . "<br>" . $conn->error;
+        echo "Erreur lors de la suppression des prix associés au véhicule : " . $conn->error;
     }
 } else {
     echo "ID invalide ou non spécifié.";
