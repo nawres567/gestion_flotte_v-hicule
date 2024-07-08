@@ -46,7 +46,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
@@ -127,7 +127,7 @@
                         <thead>
                             <tr>
                                 <th>Nom</th>
-                                <th>Date</th>
+                                
                                 <th>Description</th>
                                 <th>Image</th>
                                 <th>Prix</th>
@@ -151,9 +151,8 @@
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     echo "<td>" . $row['label'] . "</td>";
-                                    echo "<td>" . $row['datec'] . "</td>";
                                     echo "<td>" . $row['description'] . "</td>";
-                                    echo "<td><img src='" . $row['photo_path'] . "' style='width: 50px; height: 50px; border-radius: 50%; object-fit: cover;' /></td>"; // Affichage de l'image
+                                    echo "<td><img src='" . $row['photo_path'] . "' style='width: 80px; height: 60px; border-radius: 80%; object-fit: cover;' /></td>"; // Affichage de l'image
                                     echo "<td>" . number_format($row['price'], 2, ',', ' ') . "</td>";
                                     echo "<td>" . $row['note'] . "</td>";
 
@@ -162,7 +161,7 @@
                                     echo "<a style='color: jaune;' href='modifierVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a> ";
 
                                     echo " <a style='color: red;' href='supprimerVéhicule.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
-                                    echo "<span style='margin: 0 3px;'></span>";
+                                    
                                     echo " <a style='color: green;' href='detailsVéhicule.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a>";
 
 

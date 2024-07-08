@@ -66,7 +66,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
@@ -118,8 +118,17 @@
             <div class="head-title">
                 <!-- Titre de la page et fil d'Ariane -->
             </div>
-            <div class="details-container">
-                <div class="details-card">
+            <div class="head-title">
+                        <div class="left">
+                            <h1>Détails du Véhicule:</h1>
+                            <ul class="breadcrumb">
+                                <li><a href="#">Véhicules</a></li>
+                                <li><i class='bx bx-chevron-right'></i></li>
+                                <li><a class="active" href="vehicule.php">Détails</a></li>
+                            </ul>
+                        </div>
+                    </div>
+           
                     <?php
                     // Include the database connection file
                     include 'config.php';
@@ -129,32 +138,37 @@
                         $id = $_GET['id'];
 
                         // Select vehicle details from llx_product table
-                        $sql = "SELECT label, DATE(datec) AS datec, description, price, note, photo_path, document_paths FROM llx_product WHERE rowid = $id";
-                        $result = $conn->query($sql);
-
+                        $sql = "SELECT  ref_ext, label, DATE(datec) AS datec, description, price, note, color, manufacturer, vehicle_type, department, fuel_type, photo_path, document_paths FROM llx_product WHERE rowid = $id";
+                $result = $conn->query($sql);
                         if ($result->num_rows > 0) {
                             $row = $result->fetch_assoc();
                     ?>
-                    <h5 class="card-title">Détails du Véhicule: <?php echo $row['label']; ?></h5>
+                    <!-- <h5 class="card-title">Détails du Véhicule: <?php echo $row['label']; ?></h5> -->
                     <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>Date:</strong> <?php echo $row['datec']; ?></li>
-                                <li class="list-group-item"><strong>Description:</strong>
-                                    <?php echo $row['description']; ?></li>
-                                <li class="list-group-item"><strong>Prix:</strong>
-                                    <?php echo number_format($row['price'], 2, ',', ' '); ?></li>
+                                <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Nom:</strong> <?php echo $row['label']; ?></li>
+                                <li class="list-group-item"><strong>Référence:</strong> <?php echo $row['ref_ext']; ?></li>
+                                <li class="list-group-item"><strong>Description:</strong> <?php echo $row['description']; ?></li>
+                                <li class="list-group-item"><strong>Prix:</strong> <?php echo number_format($row['price'], 2, ',', ' '); ?></li>
                                 <li class="list-group-item"><strong>Modèle:</strong> <?php echo $row['note']; ?></li>
+                                <li class="list-group-item"><strong>Couleur:</strong> <?php echo $row['color']; ?></li>
+                                <li class="list-group-item"><strong>Fabricant:</strong> <?php echo $row['manufacturer']; ?></li>
+                                <li class="list-group-item"><strong>Type de véhicule:</strong> <?php echo $row['vehicle_type']; ?></li>
+                                <li class="list-group-item"><strong>Département:</strong> <?php echo $row['department']; ?></li>
+                                <li class="list-group-item"><strong>Type de carburant:</strong> <?php echo $row['fuel_type']; ?></li>
                             </ul>
+                                <li>
                             <?php if (!empty($row['document_paths'])) : ?>
                             <h5>Documents:</h5>
-                            <ul>
+                            
                                 <?php
                                             $documents = explode(',', $row['document_paths']);
                                             foreach ($documents as $document) {
                                                 echo "<li><a href='$document' download>" . basename($document) . "</a></li>";
                                             }
                                             ?>
+                            </li>
                             </ul>
                             <?php endif; ?>
                         </div>

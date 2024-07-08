@@ -1,15 +1,26 @@
 <?php
 // Include the database connection file
 include 'config.php';
-
 // Process form data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupérer les données du formulaire
+    $ref_ext = htmlspecialchars($_POST['ref_ext']);
     $vehicle_name = htmlspecialchars($_POST['vehicle_name']);
     $vehicle_year = htmlspecialchars($_POST['vehicle_year']);
     $vehicle_description = htmlspecialchars($_POST['vehicle_description']);
     $vehicle_price = htmlspecialchars($_POST['vehicle_price']);
     $vehicle_model = htmlspecialchars($_POST['vehicle_model']);
+    $vehicle_color = htmlspecialchars($_POST['vehicle_color']);
+    $vehicle_manufacturer = htmlspecialchars($_POST['vehicle_manufacturer']);
+    $vehicle_type = htmlspecialchars($_POST['vehicle_type']);
+    $vehicle_department = htmlspecialchars($_POST['vehicle_department']);
+    $vehicle_fuel_type = htmlspecialchars($_POST['vehicle_fuel_type']);
+
+    // Générer une référence unique
+    $ref = uniqid('VEH', true);
+
+    // Nouvelle référence pour ref_ext
+    
 
     // Chemin de fichier pour la photo du véhicule
     $target_file_photo = '';
@@ -44,12 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Convert documents array to a string
     $documents_str = implode(',', $vehicle_documents);
 
-    // Générer une référence unique
-    $ref = uniqid('VEH', true);
-
     // Requête SQL pour insérer les données dans la table llx_product
-    $sql = "INSERT INTO llx_product (ref, label, datec, price, note, description, photo_path, document_paths) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO llx_product (ref,  ref_ext,label, datec, price, note, description, photo_path, document_paths, color, manufacturer, vehicle_type, department, fuel_type) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
@@ -57,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $stmt->bind_param("ssssssss", $ref, $vehicle_name, $vehicle_year, $vehicle_price, $vehicle_model, $vehicle_description, $target_file_photo, $documents_str);
+    $stmt->bind_param("ssssssssssssss", $ref,$ref_ext, $vehicle_name, $vehicle_year, $vehicle_price, $vehicle_model, $vehicle_description, $target_file_photo, $documents_str, $vehicle_color, $vehicle_manufacturer, $vehicle_type, $vehicle_department, $vehicle_fuel_type);
 
     if ($stmt->execute()) {
         // Redirection vers vehicule.php après insertion réussie
@@ -70,7 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $conn->close();
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -115,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
@@ -186,58 +196,73 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3>Ajouter Véhicule</h3>
                     </div>
                     <form id="addVehicleForm" action="ajoutVéhicule.php" method="POST" enctype="multipart/form-data">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <label for="username">Nom:</label>
-                                        <input type="text" name="vehicle_name" placeholder="Nom du véhicule" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="username">Date:</label>
-                                        <input type="date" name="vehicle_year" placeholder="Année du véhicule" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="username">Description:</label>
-                                        <textarea style="height:80px" name="vehicle_description" placeholder="Description du véhicule"></textarea>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="username">Prix:</label>
-                                        <input type="number" name="vehicle_price" placeholder="Prix du véhicule" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="username">Modèle:</label>
-                                        <input type="text" name="vehicle_model" placeholder="Modèle du véhicule" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_photo">Photo du véhicule:</label>
-                                        <input type="file" name="vehicle_photo" accept="image/*">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_documents">Documents:</label>
-                                        <input type="file" name="vehicle_documents[]" multiple accept=".pdf,.doc,.docx">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <button style="padding: 10px 20px; width:170px; color: white;" type="submit">Ajouter Véhicule</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </form>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                </td>
+            </tr>
+            <label for="ref_ext">Référence du véhicule:</label>
+            <input type="text" name="ref_ext" placeholder="Référence du véhicule" required>
+            <tr>
+                <td>
+                    
+                    <label for="vehicle_name">Nom du véhicule:</label>
+                    <input type="text" name="vehicle_name" placeholder="Nom du véhicule" style="width: 30%; height: 35px;" required>
+                    <label for="vehicle_year">Année:</label>
+                    <input type="text" name="vehicle_year" placeholder="Année de production" style="width: 30%; height: 35px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="vehicle_description">Description:</label>
+                    <input type="text" name="vehicle_description" placeholder="Description du véhicule" style="width: 34%; height: 35px;">
+                    <label for="vehicle_price">Prix:</label>
+                    <input type="number" name="vehicle_price" placeholder="Prix du véhicule" style="width: 30%; height: 35px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="vehicle_model">Modèle:</label>
+                    <input type="text" name="vehicle_model" placeholder="Modèle du véhicule" style="width: 37%; height: 35px;" required>
+                    <label for="vehicle_color">Couleur:</label>
+                    <input type="text" name="vehicle_color" placeholder="Couleur du véhicule" style="width: 40%; height: 35px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="vehicle_manufacturer">Fabricant:</label>
+                    <input type="text" name="vehicle_manufacturer" placeholder="Fabricant du véhicule" style="width: 35.5%; height: 35px;">
+                    <label for="vehicle_type">Type:</label>
+                    <input type="text" name="vehicle_type" placeholder="Type du véhicule" style="width: 40%; height: 35px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="vehicle_department">Département:</label>
+                    <input type="text" name="vehicle_department" placeholder="Département" style="width: 33%; height: 35px;">
+                    <label for="vehicle_fuel_type">Type de carburant:</label>
+                    <input type="text" name="vehicle_fuel_type" placeholder="Type de carburant" style="width: 33%; height: 35px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="vehicle_photo">Photo:</label>
+                    <input type="file" name="vehicle_photo" accept="image/*" style="width: 40%; height: 35px;">
+                    <label for="vehicle_documents">Documents:</label>
+                    <input type="file" name="vehicle_documents[]" accept="application/pdf" multiple style="width: 40%; height: 35px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit"  style="width: 190px; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;"  value="Ajouter Véhicule" style="width: 80%; height: 35px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+
                 </div>
             </div>
         </main>

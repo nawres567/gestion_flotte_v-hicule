@@ -49,7 +49,7 @@ include 'config.php';
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
@@ -152,9 +152,7 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row['personal_email'] . "</td>";
         echo "<td>";
         echo " <a style='color:jaune;' href='modifierConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a>  ";
-        
         echo " <a style='color: red;' href='supprimerConducteur.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
-        echo "<span style='margin: 0 3px;'></span>"; 
         echo " <a style='color: green;' href='detailsConducteur.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-info-circle'> </i> </a>";
         echo "</td>";
         echo "</tr>";

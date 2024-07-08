@@ -1,8 +1,3 @@
-<?php
-// Include the database connection file
-include 'config.php';
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +6,7 @@ include 'config.php';
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- My CSS -->
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/ajoutC.css">
    
     <title>AutoFlotte</title>
 </head>
@@ -36,19 +31,19 @@ include 'config.php';
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li>
+            <li >
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
                 </a>
             </li>
-            <li class="active">
+            <li>
                 <a href="carburant.php">
                     <i class='bx bxs-gas-pump'></i>
                     <span class="text">Suivi du carburant</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
@@ -84,12 +79,15 @@ include 'config.php';
             <a href="#" class="nav-link">Categories</a>
             <form action="#">
                 <div class="form-input">
+                    
+                    
                 </div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
             <label for="switch-mode" class="switch-mode"></label>
             <a href="#" class="notification">
                 <i class='bx bxs-bell'></i>
+                <span class="num">8</span>
             </a>
             <a href="#" class="profile">
                 <img src="img/people.webp">
@@ -101,25 +99,28 @@ include 'config.php';
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Transactions du Carburant</h1>
+                    <h1>Maintenance</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">Transactions de Carburant</a>
+                            <a href="#">Maintenance</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
-                            <a class="active" href="#">Liste des Transactions</a>
+                            <a class="active" href="listEntretien.php">List Entretiens</a>
                         </li>
                     </ul>
                 </div>
             </div>
+            
             <div class="table-data">
-                <div class="order">
-                    <div class="head">
-                        <h3>Liste des Transactions du Carburant</h3>
-                        <button class="btn-add-transaction" style="padding: 10px 20px; width:190px; color: white;background-color: #007bff"><a href="ajoutTransaction.php" style="color: white;">Ajouter Transaction</a></button>
-                    </div>
-                    <table>
+    <div class="order">
+        <div class="head">
+            <h3>Liste Entretients </h3>
+                        <button class="btn-add-vehicle" id="btn-add-vehicle"
+                            style="padding: 10px 20px; width:170px; color: white;background-color:#007bff;"><a
+                                href="ajoutEntretien.php" style="color: white;">Ajouter Entretien</a></button>
+        </div>
+        <table>
                         <thead>
                             <tr>
                                 <th>Nom véhicule</th>

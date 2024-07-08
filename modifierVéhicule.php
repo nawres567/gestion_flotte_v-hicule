@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // SQL query to fetch vehicle details by id
-    $sql = "SELECT rowid, ref, label, DATE(datec) AS datec, description, price, note FROM llx_product WHERE rowid='$id'";
+    $sql = "SELECT * FROM llx_product WHERE rowid='$id'";
     $result = $conn->query($sql);
 
     // Check if a record is found
@@ -24,30 +24,84 @@ if (isset($_GET['id'])) {
 
 // Process form data for updating vehicle details
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $vehicle_name = $_POST['vehicle_name'];
-    $vehicle_year = $_POST['vehicle_year'];
-    $vehicle_description = $_POST['vehicle_description'];
-    $vehicle_price = $_POST['vehicle_price'];
-    $vehicle_model = $_POST['vehicle_model'];
+    // Récupérer les données du formulaire
+    $vehicle_name = htmlspecialchars($_POST['vehicle_name']);
+    $vehicle_year = htmlspecialchars($_POST['vehicle_year']);
+    $vehicle_description = htmlspecialchars($_POST['vehicle_description']);
+    $vehicle_price = htmlspecialchars($_POST['vehicle_price']);
+    $vehicle_model = htmlspecialchars($_POST['vehicle_model']);
+    $vehicle_color = htmlspecialchars($_POST['vehicle_color']);
+    $vehicle_manufacturer = htmlspecialchars($_POST['vehicle_manufacturer']);
+    $vehicle_type = htmlspecialchars($_POST['vehicle_type']);
+    $vehicle_department = htmlspecialchars($_POST['vehicle_department']);
+    $vehicle_fuel_type = htmlspecialchars($_POST['vehicle_fuel_type']);
 
-    // SQL query to update vehicle details in llx_product table
+    // Chemin de fichier pour la photo du véhicule
+    $target_file_photo = $vehicle['photo_path'];
+    $target_dir = "uploads/";
+
+    if (isset($_FILES['vehicle_photo']) && $_FILES['vehicle_photo']['error'] == UPLOAD_ERR_OK) {
+        $photo = basename($_FILES['vehicle_photo']['name']);
+        $target_file_photo = $target_dir . uniqid() . '_' . $photo; // Avoid overwriting files
+        if (!move_uploaded_file($_FILES['vehicle_photo']['tmp_name'], $target_file_photo)) {
+            echo "Erreur lors du téléchargement de la photo.";
+            exit();
+        }
+    }
+
+    // Gestion des fichiers pour les documents du véhicule
+    $vehicle_documents = explode(',', $vehicle['document_paths']);
+    if (isset($_FILES['vehicle_documents'])) {
+        foreach ($_FILES['vehicle_documents']['tmp_name'] as $key => $tmp_name) {
+            if ($_FILES['vehicle_documents']['error'][$key] == UPLOAD_ERR_OK) {
+                $file_name = basename($_FILES['vehicle_documents']['name'][$key]);
+                $target_file_doc = $target_dir . uniqid() . '_' . $file_name; // Avoid overwriting files
+                if (move_uploaded_file($tmp_name, $target_file_doc)) {
+                    $vehicle_documents[] = $target_file_doc;
+                } else {
+                    echo "Erreur lors du téléchargement des documents.";
+                    exit();
+                }
+            }
+        }
+    }
+
+    // Convert documents array to a string
+    $documents_str = implode(',', $vehicle_documents);
+
+    // Requête SQL pour mettre à jour les données dans la table llx_product
     $sql = "UPDATE llx_product SET 
-            label='$vehicle_name', 
-            datec='$vehicle_year', 
-            description='$vehicle_description', 
-            price='$vehicle_price', 
-            note='$vehicle_model'
-            WHERE rowid='$id'";
+            label=?, 
+            datec=?, 
+            price=?, 
+            note=?, 
+            description=?, 
+            photo_path=?, 
+            document_paths=?, 
+            color=?, 
+            manufacturer=?, 
+            vehicle_type=?, 
+            department=?, 
+            fuel_type=?
+            WHERE rowid=?";
 
-    if ($conn->query($sql) === TRUE) {
-        // Redirect to vehicule.php after successful update
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        echo "Erreur : " . $conn->error;
+        exit();
+    }
+
+    $stmt->bind_param("ssssssssssssi", $vehicle_name, $vehicle_year, $vehicle_price, $vehicle_model, $vehicle_description, $target_file_photo, $documents_str, $vehicle_color, $vehicle_manufacturer, $vehicle_type, $vehicle_department, $vehicle_fuel_type, $id);
+
+    if ($stmt->execute()) {
+        // Redirection vers vehicule.php après mise à jour réussie
         header("Location: vehicule.php");
         exit();
     } else {
-        echo "Erreur : " . $sql . "<br>" . $conn->error;
+        echo "Erreur : " . $stmt->error;
     }
 
-    // Close the database connection
+    $stmt->close();
     $conn->close();
 }
 ?>
@@ -57,11 +111,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <!-- My CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
-   
     <title>AdminHub</title>
 </head>
 <body>
@@ -98,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
@@ -133,8 +184,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="#" class="nav-link">Categories</a>
             <form action="#">
                 <div class="form-input">
-                    
-                    
                 </div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
@@ -170,42 +219,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="head">
                         <h3>Modifier Véhicule</h3>
                     </div>
-                    <form id="editVehicleForm" action="modifierVéhicule.php?id=<?php echo $vehicle['rowid']; ?>" method="POST">
+                    <form id="editVehicleForm" action="modifierVéhicule.php?id=<?php echo $vehicle['rowid']; ?>" method="POST" enctype="multipart/form-data">
                         <table>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <label for="vehicle_name">Nom:</label>
+                                        <label for="vehicle_name">Nom du véhicule:</label>
                                         <input type="text" name="vehicle_name" value="<?php echo $vehicle['label']; ?>" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_year">Date:</label>
-                                        <input type="date" name="vehicle_year" value="<?php echo $vehicle['datec']; ?>" required>
+                                        <label for="vehicle_year">Année:</label>
+                                        <input type="text" name="vehicle_year" value="<?php echo $vehicle['datec']; ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label for="vehicle_description">Description:</label>
-                                        <input type="textarea" style="height:80px" name="vehicle_description" value="<?php echo $vehicle['description']; ?>"></input>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                        <input type="text" name="vehicle_description" value="<?php echo $vehicle['description']; ?>">
                                         <label for="vehicle_price">Prix:</label>
-                                        <input type="number" name="vehicle_price" value="<?php echo $vehicle['price']; ?>" required>
+                                        <input type="text" name="vehicle_price" value="<?php echo $vehicle['price']; ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label for="vehicle_model">Modèle:</label>
-                                        <input type="text" name="vehicle_model" value="<?php echo $vehicle['note']; ?>" required>
+                                        <input type="text" name="vehicle_model" value="<?php echo $vehicle['note']; ?>">
+                                        <label for="vehicle_color">Couleur:</label>
+                                        <input type="text" name="vehicle_color" value="<?php echo $vehicle['color']; ?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button style="padding: 10px 20px; width:200px; color: white;" type="submit">Mettre à jour Véhicule</button>
+                                        <label for="vehicle_manufacturer">Fabricant:</label>
+                                        <input type="text" name="vehicle_manufacturer" value="<?php echo $vehicle['manufacturer']; ?>">
+                                        <label for="vehicle_type">Type de véhicule:</label>
+                                        <input type="text" name="vehicle_type" value="<?php echo $vehicle['vehicle_type']; ?>">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="vehicle_department">Département:</label>
+                                        <input type="text" name="vehicle_department" value="<?php echo $vehicle['department']; ?>">
+                                        <label for="vehicle_fuel_type">Type de carburant:</label>
+                                        <input type="text" name="vehicle_fuel_type" value="<?php echo $vehicle['fuel_type']; ?>">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="vehicle_photo">Photo:</label>
+                                        <input type="file" name="vehicle_photo">
+                                        <?php if (!empty($vehicle['photo_path'])): ?>
+                                            <img src="<?php echo $vehicle['photo_path']; ?>" alt="Vehicle Photo" style="max-width: 200px;">
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="vehicle_documents">Documents:</label>
+                                        <input type="file" name="vehicle_documents[]" multiple>
+                                        <?php
+                                        if (!empty($vehicle['document_paths'])) {
+                                            $docs = explode(',', $vehicle['document_paths']);
+                                            foreach ($docs as $doc) {
+                                                echo "<a href='$doc'>Document</a><br>";
+                                            }
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button type="submit">Mettre à jour</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -216,8 +298,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </main>
         <!-- MAIN -->
     </section>
-    <!-- CONTENT -->
-
-    <script src="script.js"></script>
 </body>
 </html>

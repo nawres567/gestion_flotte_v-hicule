@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // SQL query to fetch driver details by id
-    $sql = "SELECT rowid, gender, lastname, firstname, address, user_mobile, email, personal_email FROM llx_user WHERE rowid='$id'";
+    $sql = "SELECT rowid, gender, lastname, firstname, address, user_mobile, email, personal_email,signature, job,lang, zip, lang, birth, photo FROM llx_user WHERE rowid='$id'";
     $result = $conn->query($sql);
 
     // Check if a record is found
@@ -30,17 +30,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = $_POST['address'];
     $user_mobile = $_POST['user_mobile'];
     $email = $_POST['email'];
-    $vehicle_label = $_POST['vehicle_label']; // Get the selected vehicle label
+    $vehicle_label = $_POST['vehicle_label'];
+    $department = $_POST['department'];
+   
+    $job = $_POST['job'];
+    $city = $_POST['city'];
+    $zip = $_POST['zip'];
+    $birthdate = $_POST['birthdate'];
+    $photo = $driver['photo'];
 
+    // Handle photo upload
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+        $photo = basename($_FILES['photo']['name']);
+        $target_dir = "uploads/";
+        $target_file = $target_dir . $photo;
+        if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
+            // File uploaded successfully
+        } else {
+            echo "Erreur lors du téléchargement de la photo.";
+            exit();
+        }
+    }
     // Fetch the vehicle label
     $vehicle_sql = "SELECT label FROM llx_product WHERE rowid='$vehicle_label'";
     $vehicle_result = $conn->query($vehicle_sql);
 
     if ($vehicle_result->num_rows > 0) {
         $vehicle_row = $vehicle_result->fetch_assoc();
-        $vehicle_label = $vehicle_row['label']; // Get the vehicle label
+        $vehicle_label = $vehicle_row['label'];
     } else {
-        $vehicle_label = "Véhicule inconnu"; // Handle case where vehicle is not found
+        $vehicle_label = "Véhicule inconnu";
     }
 
     // SQL query to update driver details in llx_user table
@@ -50,8 +69,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             firstname='$firstname', 
             address='$address', 
             user_mobile='$user_mobile', 
-            email='$email',
-            personal_email='$vehicle_label' 
+            email='$email', 
+            personal_email='$vehicle_label', 
+            signature='$department', 
+            job='$job', 
+            lang='$city', 
+            zip='$zip', 
+            birth='$birthdate', 
+            photo='$photo' 
             WHERE rowid='$id'";
 
     if ($conn->query($sql) === TRUE) {
@@ -112,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
@@ -181,103 +206,93 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="head">
                         <h3>Modifier Conducteur</h3>
                     </div>
-                    <form id="editDriverForm" action="modifierConducteur.php?id=<?php echo $driver['rowid']; ?>" method="POST">
+                    <form id="editDriverForm" action="modifierConducteur.php?id=<?php echo $driver['rowid']; ?>" method="POST" enctype="multipart/form-data">
                         <table>
                             <tbody>
                                 <tr>
                                     <td>
                                         <label for="gender">Genre:</label>
-                                        <select  style=" padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    width: 350px;
-    height: 45px;" name="gender" required>
+                                        <select name="gender" required style="width: 40%; height: 35px;">
                                             <option value="M" <?php if ($driver['gender'] == 'M') echo 'selected'; ?>>Masculin</option>
                                             <option value="F" <?php if ($driver['gender'] == 'F') echo 'selected'; ?>>Féminin</option>
                                         </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                 
                                         <label for="lastname">Nom:</label>
-                                        <input type="text" name="lastname" value="<?php echo $driver['lastname']; ?>" required>
+                                        <input type="text" name="lastname" value="<?php echo $driver['lastname']; ?>" required style="width: 40%; height: 35px;">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label for="firstname">Prénom:</label>
-                                        <input type="text" name="firstname" value="<?php echo $driver['firstname']; ?>" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                        <input type="text" name="firstname" value="<?php echo $driver['firstname']; ?>" required style="width: 39%; height: 35px;">
+                                 
                                         <label for="address">Adresse:</label>
-                                        <input type="text" name="address" value="<?php echo $driver['address']; ?>">
+                                        <input type="text" name="address" value="<?php echo $driver['address']; ?>" style="width: 40%; height: 35px;">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label for="user_mobile">Mobile:</label>
-                                        <input type="number" name="user_mobile" value="<?php echo $driver['user_mobile']; ?>" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                        <input type="number" name="user_mobile" value="<?php echo $driver['user_mobile']; ?>" required style="width: 40%; height: 35px;">
+                                   
                                         <label for="email">Email:</label>
-                                        <input type="email" name="email" value="<?php echo $driver['email']; ?>" required>
+                                        <input type="email" name="email" value="<?php echo $driver['email']; ?>" required style="width: 40%; height: 35px;">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                         <label for="vehicle_label">Véhicule:</label>
-                                         <select style=" padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    width: 350px;
-    height: 45px;" name="vehicle_label" required>
+                                        <label for="vehicle_label">Véhicule:</label>
+                                        <select name="vehicle_label" required style="width: 38.5%; height: 35px;">
+                                            <option value="">Sélectionner un véhicule</option>
                                             <?php
-                                            // Inclusion du fichier de connexion à la base de données
-                                            include 'config.php';
+                                            // Fetch vehicle options from llx_product table
+                                            $vehicle_sql = "SELECT rowid, label FROM llx_product";
+                                            $vehicle_result = $conn->query($vehicle_sql);
 
-                                            // Sélectionner tous les véhicules depuis la table llx_product
-                                            $sql = "SELECT rowid, label FROM llx_product";
-                                            $result = $conn->query($sql);
-
-                                            // Vérifier s'il y a des enregistrements
-                                            if ($result->num_rows > 0) {
-                                                // Afficher les données de chaque ligne
-                                                while($row = $result->fetch_assoc()) {
-                                                    $selected = ($row['label'] == $driver['personal_email']) ? 'selected' : '';
-                                                    echo "<option value='" . $row['rowid'] . "' $selected>" . $row['label'] . "</option>";
-                                                }
-                                            } else {
-                                                echo "<option disabled>Aucun véhicule disponible</option>";
+                                            while ($vehicle_row = $vehicle_result->fetch_assoc()) {
+                                                $selected = ($vehicle_row['label'] == $driver['personal_email']) ? 'selected' : '';
+                                                echo "<option value='" . $vehicle_row['rowid'] . "' $selected>" . $vehicle_row['label'] . "</option>";
                                             }
-
-                                            // Fermer la connexion à la base de données
-                                            $conn->close();
                                             ?>
                                         </select>
+                                   
+                                        <label for="department">Département:</label>
+                                        <input type="text" name="department" value="<?php echo $driver['signature']; ?>" style="width: 40%; height: 35px;">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input style="padding: 1px;
-    font-size: 16px;
-    background-color: rgb(5, 20, 137);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    height: 30px;
-    width: 200px;" type="submit" value="Mettre à jour">
+                                        <label for="job">Poste:</label>
+                                        <input type="text" name="job" value="<?php echo $driver['job']; ?>" style="width: 41%; height: 35px;">
+                                   
+                                        <label for="city">Ville:</label>
+                                        <input type="text" name="city" value="<?php echo $driver['lang']; ?>" style="width: 40%; height: 35px;">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <label for="zip">Code Postal:</label>
+                                        <input type="number" name="zip" value="<?php echo $driver['zip']; ?>" required style="width: 36%; height: 35px;">
+                                    
+                                        <label for="birthdate">Date de Naissance:</label>
+                                        <input type="date" name="birthdate" value="<?php echo $driver['birth']; ?>" required style="width: 40%; height: 35px;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="photo">Photo:</label>
+                                        <input type="file" name="photo" accept="image/*" style="width: 80%; height: 35px;">
+                                        <?php if ($driver['photo']): ?>
+                                            <img src="uploads/<?php echo $driver['photo']; ?>" alt="Driver Photo" style="width: 100px; height: 100px;">
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="submit" value="Enregistrer" style="width: 190px; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;">
+                                        </td>
+                                    </tr>
+
                             </tbody>
                         </table>
                     </form>
@@ -286,5 +301,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </main>
         <!-- MAIN -->
     </section>
+    <!-- CONTENT -->
 </body>
 </html>
