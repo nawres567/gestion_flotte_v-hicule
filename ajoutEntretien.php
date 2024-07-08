@@ -1,5 +1,6 @@
 <?php
 // Vérification de la soumission du formulaire
+// Vérification de la soumission du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Inclusion du fichier de configuration de la base de données
     include 'config.php';
@@ -12,6 +13,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date_entretien = $_POST['date_entretien'];
     $nom_technicien = $_POST['nom_technicien'];
 
+    // Récupération du libellé du véhicule
+    $sql_label = "SELECT label FROM llx_product WHERE rowid = ?";
+    $stmt_label = $conn->prepare($sql_label);
+    $stmt_label->bind_param("i", $vehicule);
+    $stmt_label->execute();
+    $stmt_label->bind_result($label);
+    $stmt_label->fetch();
+    $stmt_label->close();
+
     // Préparation de la requête SQL pour insérer les données
     $sql = "INSERT INTO llx_product_extrafields (fk_object, nom, tache, etat, date, conducteur, technicien) 
             VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -23,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Liaison des paramètres et exécution de la requête
-    $stmt->bind_param("issssss", $vehicule, $nom_conducteur, $tache_entretien, $etat_tache, $date_entretien, $nom_conducteur, $nom_technicien);
+    $stmt->bind_param("issssss", $vehicule, $label, $tache_entretien, $etat_tache, $date_entretien, $nom_conducteur, $nom_technicien);
     
     // Exécution de la requête
     if ($stmt->execute()) {
@@ -36,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>
