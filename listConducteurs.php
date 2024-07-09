@@ -91,7 +91,7 @@ include 'config.php';
             <a href="#" class="notification">
                 <i class='bx bxs-bell'></i>
             </a>
-            <a href="#" class="profile">
+            <a href="profil.php" class="profile">
                 <img src="img/people.webp">
             </a>
         </nav>

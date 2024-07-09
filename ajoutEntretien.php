@@ -77,6 +77,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-align: left;
             padding-left: 30px;
         }
+        .form-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-right: 20px;
+    }
+
+    .form-group:last-child {
+        margin-right: 0;
+    }
+
+    .form-group label {
+        width: 220px;
+        display: inline-block;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 250px;
+        height: 35px;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .btn-submit {
+        width: 200px;
+        height: 40px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
     </style>
     <title>AutoFlotte</title>
     
@@ -160,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <i class='bx bxs-bell'></i>
                 <span class="num">8</span>
             </a>
-            <a href="#" class="profile">
+            <a href="profil.php" class="profile">
                 <img src="img/people.webp">
             </a>
         </nav>
@@ -189,79 +224,74 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h3>Ajouter Entretien</h3>
         </div>
         <form id="addMaintenanceForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-            <table class="form-table">
-                <tbody>
-                    <tr>
-                        <td class="label"><label for="vehicule">Véhicule:</label></td>
-                        <td class="input">
-                            <select name="vehicule" style="width: 70%; height: 35px;" required>
-                                <!-- Options chargées depuis la base de données -->
-                                <?php
-                                include 'config.php';
-                                $sql = "SELECT rowid, label FROM llx_product";
-                                $result = $conn->query($sql);
-                                if ($result->num_rows > 0) {
-                                    while($row = $result->fetch_assoc()) {
-                                        echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
-                                    }
-                                } else {
-                                    echo "<option disabled>Aucun véhicule disponible</option>";
-                                }
-                                $conn->close();
-                                ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label"><label for="nom_conducteur">Nom du conducteur:</label></td>
-                        <td class="input">
-                            <select name="nom_conducteur" style="width: 70%; height: 35px;"required>
-                                <!-- Options chargées depuis la base de données -->
-                                <?php
-                                include 'config.php';
-                                $sql = "SELECT rowid, lastname FROM llx_user WHERE entity = 2";
-                                $result = $conn->query($sql);
-                                if ($result->num_rows > 0) {
-                                    while($row = $result->fetch_assoc()) {
-                                        echo "<option value='" . $row['lastname'] . "'>" . $row['lastname'] . "</option>";
-                                    }
-                                } else {
-                                    echo "<option disabled>Aucun conducteur trouvé</option>";
-                                }
-                                $conn->close();
-                                ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label"><label for="tache_entretien">Tâche d'entretien:</label></td>
-                        <td class="input"><input type="text" name="tache_entretien" placeholder="Tâche d'entretien" style="width: 70%; height: 35px;" required></td>
-                    </tr>
-                    <tr>
-    <td class="label"><label for="etat_tache">État de la tâche:</label></td>
-    <td class="input">
-        <select name="etat_tache" style="width: 70%; height: 35px;" required>
-            <option value="à faire">À faire</option>
-            <option value="en cours">En cours</option>
-            <option value="terminé">Terminé</option>
-        </select>
-    </td>
-</tr>
-                    <tr>
-                        <td class="label"><label for="date_entretien">Date de l'entretien:</label></td>
-                        <td class="input"><input type="date" name="date_entretien" placeholder="Date de l'entretien" style="width: 70%; height: 35px;"required></td>
-                    </tr>
-                    <tr>
-                        <td class="label"><label for="nom_technicien">Nom du technicien:</label></td>
-                        <td class="input"><input type="text" name="nom_technicien" placeholder="Nom du technicien" style="width: 70%; height: 35px;" required></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="input">
-                            <input type="submit" style="width: 70%; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;" value="Ajouter Entretien">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicule">Véhicule:</label>
+            <select name="vehicule" class="form-control" required>
+                <!-- Options chargées depuis la base de données -->
+                <?php
+                include 'config.php';
+                $sql = "SELECT rowid, label FROM llx_product";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
+                    }
+                } else {
+                    echo "<option disabled>Aucun véhicule disponible</option>";
+                }
+                $conn->close();
+                ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="nom_conducteur">Nom du conducteur:</label>
+            <select name="nom_conducteur" class="form-control" required>
+                <!-- Options chargées depuis la base de données -->
+                <?php
+                include 'config.php';
+                $sql = "SELECT rowid, lastname FROM llx_user WHERE entity = 2";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<option value='" . $row['lastname'] . "'>" . $row['lastname'] . "</option>";
+                    }
+                } else {
+                    echo "<option disabled>Aucun conducteur trouvé</option>";
+                }
+                $conn->close();
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="tache_entretien">Tâche d'entretien:</label>
+            <input type="text" name="tache_entretien" class="form-control" placeholder="Tâche d'entretien" required>
+        </div>
+        <div class="form-group">
+            <label for="etat_tache">État de la tâche:</label>
+            <select name="etat_tache" class="form-control" required>
+                <option value="à faire">À faire</option>
+                <option value="en cours">En cours</option>
+                <option value="terminé">Terminé</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_entretien">Date de l'entretien:</label>
+            <input type="date" name="date_entretien" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="nom_technicien">Nom du technicien:</label>
+            <input type="text" name="nom_technicien" class="form-control" placeholder="Nom du technicien" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <button type="submit" class="btn-submit">Ajouter Entretien</button>
+    </div>
+</form>
+
 </body>
 </html>

@@ -179,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <i class='bx bxs-bell'></i>
                 <span class="num">8</span>
             </a>
-            <a href="#" class="profile">
+            <a href="profil.php" class="profile">
                 <img src="img/people.webp">
             </a>
         </nav>

@@ -12,16 +12,21 @@ function getFrenchMonthName($month) {
     return $months[$month];
 }
 
-// Récupérer le mois et l'année actuelle ou depuis les paramètres GET
+// Récupérer le mois, l'année et le jour actuels ou depuis les paramètres GET
 $currentMonth = isset($_GET['month']) ? $_GET['month'] : date('n');
 $currentYear = isset($_GET['year']) ? $_GET['year'] : date('Y');
+$currentDay = isset($_GET['day']) ? $_GET['day'] : '';
 
 // Calculer le premier et dernier jour du mois sélectionné
 $firstDayOfMonth = date('Y-m-01', strtotime("$currentYear-$currentMonth-01"));
 $lastDayOfMonth = date('Y-m-t', strtotime("$currentYear-$currentMonth-01"));
 
-// Récupérer les entretiens pour le mois sélectionné
+// Construire la requête SQL pour récupérer les entretiens
 $sql = "SELECT * FROM llx_product_extrafields WHERE DATE(date) BETWEEN '$firstDayOfMonth' AND '$lastDayOfMonth'";
+if (!empty($currentDay)) {
+    $selectedDate = date('Y-m-d', strtotime("$currentYear-$currentMonth-$currentDay"));
+    $sql .= " AND DATE(date) = '$selectedDate'";
+}
 $result = $conn->query($sql);
 
 // Créer un tableau associatif des entretiens par date pour faciliter l'affichage dans le calendrier
@@ -119,12 +124,38 @@ $conn->close();
         <label for="switch-mode" class="switch-mode"></label>
         <a href="#" class="notification">
             <i class='bx bxs-bell'></i>
-            <span class="num">8</span>
+            
         </a>
-        <a href="#" class="profile">
+        <a href="profil.php" class="profile">
             <img src="img/people.webp">
         </a>
     </nav>
+    <div class="notification-popup">
+    <div class="notification-content">
+        <span class="close">&times;</span>
+        <h2>Prochains entretiens</h2>
+        <ul>
+            <?php
+            // Fetch upcoming maintenance events
+            $today = date('Y-m-d');
+            $upcomingEvents = [];
+            foreach ($events as $eventDate => $eventDetails) {
+                if ($eventDate >= $today) {
+                    foreach ($eventDetails as $event) {
+                        $upcomingEvents[] = "<li>{$event['nom']} le {$eventDate}</li>";
+                    }
+                }
+            }
+            // Display upcoming events in the popup
+            if (count($upcomingEvents) > 0) {
+                echo implode('', $upcomingEvents);
+            } else {
+                echo "<li>Aucun entretien prévu prochainement</li>";
+            }
+            ?>
+        </ul>
+    </div>
+</div>
 
     <main>
         <div class="head-title">
@@ -137,6 +168,8 @@ $conn->close();
                 </ul>
             </div>
         </div>
+
+        
         <div class="calendar">
             <div class="calendar-header">
                 <form action="#" method="GET">
@@ -152,6 +185,16 @@ $conn->close();
                     </select>
                     <label for="year">Année :</label>
                     <input type="number" name="year" id="year" value="<?php echo $currentYear; ?>">
+                    <label for="day">Jour :</label>
+                    <select name="day" id="day">
+                        <option value="">Tous</option>
+                        <?php
+                        for ($d = 1; $d <= 31; ++$d) {
+                            $selected = ($d == $currentDay) ? 'selected' : '';
+                            echo "<option value='$d' $selected>$d</option>";
+                        }
+                        ?>
+                    </select>
                     <button type="submit">Filtrer</button>
                 </form>
             </div>
@@ -197,8 +240,8 @@ $conn->close();
                             }
 
                             echo "<div class='event $eventClass'>";
-                            echo "<span   style='' class='event-title'>{$event['nom']}</span>";
-                            echo"</br>";
+                            echo "<span class='event-title'>{$event['nom']}</span>";
+                            echo "<br>";
                             echo "<span class='event-time'>{$event['tache']}</span>";
                             echo "</div>";
                         }
@@ -216,6 +259,21 @@ $conn->close();
         </div>
     </main>
 </section>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bellIcon = document.querySelector('.notification');
+    const notificationPopup = document.querySelector('.notification-popup');
+    const closeBtn = document.querySelector('.notification-popup .close');
+
+    bellIcon.addEventListener('click', function() {
+        notificationPopup.classList.toggle('show');
+    });
+
+    closeBtn.addEventListener('click', function() {
+        notificationPopup.classList.remove('show');
+    });
+});
+</script>
 
 <!-- SCRIPTS -->
 <script src="script.js"></script>

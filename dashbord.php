@@ -49,7 +49,7 @@ $conn->close();
 		</a>
 		<ul class="side-menu top">
 			<li class="active">
-				<a href="#">
+				<a href="dashbord.php">
 					<i class='bx bxs-dashboard' ></i>
 					<span class="text">Dashboard</span>
 				</a>
@@ -120,7 +120,7 @@ $conn->close();
 				<i class='bx bxs-bell' ></i>
 				<span class="num">8</span>
 			</a>
-			<a href="#" class="profile">
+			<a href="profil.php" class="profile">
 				<img src="img/people.webp">
 			</a>
 		</nav>
@@ -166,11 +166,5 @@ $conn->close();
 					</span>
 				</li>
 			</ul>
-		</main>
-		<!-- MAIN -->
-	</section>
-	<!-- CONTENT -->
 	
-	<script src="script.js"></script>
-</body>
-</html>
+			

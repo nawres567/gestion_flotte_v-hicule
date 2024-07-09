@@ -129,11 +129,77 @@
 
 /* Style du bouton "Filtrer" */
 .calendar-header button {
-    background-color: rgb(61, 7, 161); /* Couleur de fond bleue */
-    color: white; /* Texte blanc */
+    background-color:white; /* Couleur de fond bleue */
+    color: black; /* Texte blanc */
     border: none; /* Pas de bordure */
     cursor: pointer; /* Curseur pointer */
-    padding: 8px 12px; /* Espacement interne */
+    padding: 5px; /* Espacement interne */
     margin-left: 10px; /* Espacement à gauche */
     border-radius: 4px; /* Coins arrondis */
+}
+.notification-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #888;
+}
+
+#notificationList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#notificationList li {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+.notification-popup {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #f1f1f1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    padding: 10px;
+    max-width: 300px;
+}
+
+.notification-content {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.notification-popup.show {
+    display: block;
+}
+
+.notification-content .close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
 }
