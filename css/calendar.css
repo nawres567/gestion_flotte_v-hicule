@@ -1,0 +1,139 @@
+/* Reset de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Styles généraux pour le calendrier */
+.calendar {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.calendar-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+.calendar-header form {
+    display: inline-block;
+}
+
+.calendar-header label,
+.calendar-header select,
+.calendar-header input {
+    margin-right: 10px;
+   
+}
+.calendar-header input year {
+    width: 500px;
+    
+}
+
+.calendar-body {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.calendar-day {
+    width: calc(100% / 7);
+    padding: 10px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    min-height: 100px;
+    position: relative;
+}
+
+.calendar-day.empty {
+    background-color: #f5f5f5;
+}
+
+.day-number {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.event {
+    background-color: #ffc107;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.event-title {
+    font-weight: bold;
+}
+
+.event-time {
+    font-size: 12px;
+    color: #555;
+}
+
+/* Styles pour la sidebar et le contenu principal */
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background-color: #252525;
+    color: #fff;
+    padding-top: 20px;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+}
+
+
+.event-yellow {
+    background-color: yellow;
+}
+
+.event-green {
+    background-color: green;
+}
+
+.event-blue {
+    background-color: #4682B4;
+}
+.calendar-header label {
+    margin-right: 10px; /* Espacement entre les labels et les éléments adjacents */
+    font-weight: bold; /* Police en gras pour les labels */
+}
+
+/* CSS pour les inputs */
+.calendar-header select,
+.calendar-header input[type="number"],
+.calendar-header button {
+    height: 30px; /* Hauteur uniforme pour les éléments de formulaire */
+    padding: 5px; /* Espacement interne pour les inputs */
+    border: 1px solid #ccc; /* Bordure grise */
+    border-radius: 4px; /* Coins arrondis */
+    width:100px;
+}
+
+/* Style du bouton "Filtrer" */
+.calendar-header button {
+    background-color: rgb(61, 7, 161); /* Couleur de fond bleue */
+    color: white; /* Texte blanc */
+    border: none; /* Pas de bordure */
+    cursor: pointer; /* Curseur pointer */
+    padding: 8px 12px; /* Espacement interne */
+    margin-left: 10px; /* Espacement à gauche */
+    border-radius: 4px; /* Coins arrondis */
+}

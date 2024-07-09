@@ -38,6 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Exécution de la requête
     if ($stmt->execute()) {
         echo "Entretien ajouté avec succès.";
+        // Redirection vers listEntretien.php
+        header("Location: listEntretien.php");
+        exit();
     } else {
         echo "Erreur lors de l'ajout de l'entretien: " . $stmt->error;
     }
@@ -54,12 +57,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- My CSS -->
     <link rel="stylesheet" href="css/ajoutC.css">
-   
+    <style>
+        /* Ajouter ce style pour réduire l'espace entre les labels et les inputs */
+        .form-table td.label, .form-table td.input {
+            padding: 5px;
+        }
+
+        .form-table td.label {
+            text-align: left;
+            padding-right: 200px;
+        }
+
+        .form-table td.input {
+            text-align: left;
+            padding-left: 30px;
+        }
+    </style>
     <title>AutoFlotte</title>
+    
 </head>
 <body>
 
@@ -82,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li class="active">
+            <li >
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
@@ -94,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="text">Suivi du carburant</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
@@ -150,14 +170,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Conducteurs</h1>
+                    <h1>Maintenance</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">Conducteurs</a>
+                            <a href="#">Maintenance</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
-                            <a class="active" href="listConducteurs.php">List Conducteurs</a>
+                            <a class="active" href="listEntretien.php">List Entretiens</a>
                         </li>
                     </ul>
                 </div>
@@ -166,58 +186,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="table-data">
     <div class="order">
         <div class="head">
-            <h3>Ajouter Conducteur</h3>
+            <h3>Ajouter Entretien</h3>
         </div>
         <form id="addMaintenanceForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-        <label for="vehicule">Véhicule:</label>
-        <select name="vehicule" style="width: 40%; height: 45px;" required>
-            <!-- Options chargées depuis la base de données -->
-            <?php
-            include 'config.php';
-            $sql = "SELECT rowid, label FROM llx_product";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
-                }
-            } else {
-                echo "<option disabled>Aucun véhicule disponible</option>";
-            }
-            $conn->close();
-            ?>
+            <table class="form-table">
+                <tbody>
+                    <tr>
+                        <td class="label"><label for="vehicule">Véhicule:</label></td>
+                        <td class="input">
+                            <select name="vehicule" style="width: 70%; height: 35px;" required>
+                                <!-- Options chargées depuis la base de données -->
+                                <?php
+                                include 'config.php';
+                                $sql = "SELECT rowid, label FROM llx_product";
+                                $result = $conn->query($sql);
+                                if ($result->num_rows > 0) {
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
+                                    }
+                                } else {
+                                    echo "<option disabled>Aucun véhicule disponible</option>";
+                                }
+                                $conn->close();
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label"><label for="nom_conducteur">Nom du conducteur:</label></td>
+                        <td class="input">
+                            <select name="nom_conducteur" style="width: 70%; height: 35px;"required>
+                                <!-- Options chargées depuis la base de données -->
+                                <?php
+                                include 'config.php';
+                                $sql = "SELECT rowid, lastname FROM llx_user WHERE entity = 2";
+                                $result = $conn->query($sql);
+                                if ($result->num_rows > 0) {
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<option value='" . $row['lastname'] . "'>" . $row['lastname'] . "</option>";
+                                    }
+                                } else {
+                                    echo "<option disabled>Aucun conducteur trouvé</option>";
+                                }
+                                $conn->close();
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label"><label for="tache_entretien">Tâche d'entretien:</label></td>
+                        <td class="input"><input type="text" name="tache_entretien" placeholder="Tâche d'entretien" style="width: 70%; height: 35px;" required></td>
+                    </tr>
+                    <tr>
+    <td class="label"><label for="etat_tache">État de la tâche:</label></td>
+    <td class="input">
+        <select name="etat_tache" style="width: 70%; height: 35px;" required>
+            <option value="à faire">À faire</option>
+            <option value="en cours">En cours</option>
+            <option value="terminé">Terminé</option>
         </select>
-
-        <label for="nom_conducteur">Nom du conducteur:</label>
-        <select name="nom_conducteur" style="width: 80%; height: 35px;" required>
-            <!-- Options chargées depuis la base de données -->
-            <?php
-            include 'config.php';
-            $sql = "SELECT rowid, lastname FROM llx_user WHERE entity = 2";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo "<option value='" . $row['lastname'] . "'>" . $row['lastname'] . "</option>";
-                }
-            } else {
-                echo "<option disabled>Aucun conducteur trouvé</option>";
-            }
-            $conn->close();
-            ?>
-        </select>
-
-        <label for="tache_entretien">Tâche d'entretien:</label>
-        <input type="text" name="tache_entretien" placeholder="Tâche d'entretien" required>
-
-        <label for="etat_tache">État de la tâche:</label>
-        <input type="text" name="etat_tache" placeholder="État de la tâche" required>
-
-        <label for="date_entretien">Date de l'entretien:</label>
-        <input type="date" name="date_entretien" placeholder="Date de l'entretien" required>
-
-        <label for="nom_technicien">Nom du technicien:</label>
-        <input type="text" name="nom_technicien" placeholder="Nom du technicien" required>
-
-        <input type="submit" style="width: 190px; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;" value="Ajouter Entretien">
-    </form>
+    </td>
+</tr>
+                    <tr>
+                        <td class="label"><label for="date_entretien">Date de l'entretien:</label></td>
+                        <td class="input"><input type="date" name="date_entretien" placeholder="Date de l'entretien" style="width: 70%; height: 35px;"required></td>
+                    </tr>
+                    <tr>
+                        <td class="label"><label for="nom_technicien">Nom du technicien:</label></td>
+                        <td class="input"><input type="text" name="nom_technicien" placeholder="Nom du technicien" style="width: 70%; height: 35px;" required></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="input">
+                            <input type="submit" style="width: 70%; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;" value="Ajouter Entretien">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
 </body>
 </html>

@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $documents_str = implode(',', $vehicle_documents);
 
     // Requête SQL pour insérer les données dans la table llx_product
-    $sql = "INSERT INTO llx_product (ref,  ref_ext,label, datec, price, note, description, photo_path, document_paths, color, manufacturer, vehicle_type, department, fuel_type) 
+    $sql = "INSERT INTO llx_product (ref,  ref_ext,label,  price, note, description, photo_path, document_paths, color, manufacturer, vehicle_type, department, fuel_type, annee) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $stmt->bind_param("ssssssssssssss", $ref,$ref_ext, $vehicle_name, $vehicle_year, $vehicle_price, $vehicle_model, $vehicle_description, $target_file_photo, $documents_str, $vehicle_color, $vehicle_manufacturer, $vehicle_type, $vehicle_department, $vehicle_fuel_type);
+    $stmt->bind_param("ssssssssssssss", $ref,$ref_ext, $vehicle_name,  $vehicle_price, $vehicle_model, $vehicle_description, $target_file_photo, $documents_str, $vehicle_color, $vehicle_manufacturer, $vehicle_type, $vehicle_department, $vehicle_fuel_type, $vehicle_year);
 
     if ($stmt->execute()) {
         // Redirection vers vehicule.php après insertion réussie
@@ -90,6 +90,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/dashboard.css">
     <title>AdminHub</title>
+    <style>
+    .form-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-right: 20px;
+    }
+
+    .form-group:last-child {
+        margin-right: 0;
+    }
+
+    .form-group label {
+        width: 220px;
+        display: inline-block;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 250px;
+        height: 35px;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .btn-submit {
+        width: 200px;
+        height: 40px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
 </head>
 
 <body>
@@ -196,71 +233,77 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3>Ajouter Véhicule</h3>
                     </div>
                     <form id="addVehicleForm" action="ajoutVéhicule.php" method="POST" enctype="multipart/form-data">
-    <table>
-        <tbody>
-            <tr>
-                <td>
-                </td>
-            </tr>
+    <div class="form-row">
+        <div class="form-group">
             <label for="ref_ext">Référence du véhicule:</label>
             <input type="text" name="ref_ext" placeholder="Référence du véhicule" required>
-            <tr>
-                <td>
-                    
-                    <label for="vehicle_name">Nom du véhicule:</label>
-                    <input type="text" name="vehicle_name" placeholder="Nom du véhicule" style="width: 30%; height: 35px;" required>
-                    <label for="vehicle_year">Année:</label>
-                    <input type="text" name="vehicle_year" placeholder="Année de production" style="width: 30%; height: 35px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="vehicle_description">Description:</label>
-                    <input type="text" name="vehicle_description" placeholder="Description du véhicule" style="width: 34%; height: 35px;">
-                    <label for="vehicle_price">Prix:</label>
-                    <input type="number" name="vehicle_price" placeholder="Prix du véhicule" style="width: 30%; height: 35px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="vehicle_model">Modèle:</label>
-                    <input type="text" name="vehicle_model" placeholder="Modèle du véhicule" style="width: 37%; height: 35px;" required>
-                    <label for="vehicle_color">Couleur:</label>
-                    <input type="text" name="vehicle_color" placeholder="Couleur du véhicule" style="width: 40%; height: 35px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="vehicle_manufacturer">Fabricant:</label>
-                    <input type="text" name="vehicle_manufacturer" placeholder="Fabricant du véhicule" style="width: 35.5%; height: 35px;">
-                    <label for="vehicle_type">Type:</label>
-                    <input type="text" name="vehicle_type" placeholder="Type du véhicule" style="width: 40%; height: 35px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="vehicle_department">Département:</label>
-                    <input type="text" name="vehicle_department" placeholder="Département" style="width: 33%; height: 35px;">
-                    <label for="vehicle_fuel_type">Type de carburant:</label>
-                    <input type="text" name="vehicle_fuel_type" placeholder="Type de carburant" style="width: 33%; height: 35px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="vehicle_photo">Photo:</label>
-                    <input type="file" name="vehicle_photo" accept="image/*" style="width: 40%; height: 35px;">
-                    <label for="vehicle_documents">Documents:</label>
-                    <input type="file" name="vehicle_documents[]" accept="application/pdf" multiple style="width: 40%; height: 35px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit"  style="width: 190px; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;"  value="Ajouter Véhicule" style="width: 80%; height: 35px;">
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        </div>
+        <div class="form-group">
+            <label for="vehicle_name">Nom du véhicule:</label>
+            <input type="text" name="vehicle_name" placeholder="Nom du véhicule" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_year">Année:</label>
+            <input type="year" name="vehicle_year" placeholder="Année de production">
+        </div>
+        <div class="form-group">
+            <label for="vehicle_description">Description:</label>
+            <input type="text" name="vehicle_description" placeholder="Description du véhicule">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_price">Prix:</label>
+            <input type="number" name="vehicle_price" placeholder="Prix du véhicule">
+        </div>
+        <div class="form-group">
+            <label for="vehicle_model">Modèle:</label>
+            <input type="text" name="vehicle_model" placeholder="Modèle du véhicule" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_color">Couleur:</label>
+            <input type="text" name="vehicle_color" placeholder="Couleur du véhicule">
+        </div>
+        <div class="form-group">
+            <label for="vehicle_manufacturer">Fabricant:</label>
+            <input type="text" name="vehicle_manufacturer" placeholder="Fabricant du véhicule">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_type">Type:</label>
+            <input type="text" name="vehicle_type" placeholder="Type du véhicule">
+        </div>
+        <div class="form-group">
+            <label for="vehicle_department">Département:</label>
+            <input type="text" name="vehicle_department" placeholder="Département">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_fuel_type">Type de carburant:</label>
+            <input type="text" name="vehicle_fuel_type" placeholder="Type de carburant">
+        </div>
+        <div class="form-group">
+            <label for="vehicle_photo">Photo:</label>
+            <input type="file" name="vehicle_photo" accept="image/*">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_documents">Documents:</label>
+            <input type="file" name="vehicle_documents[]" accept="application/pdf" multiple>
+        </div>
+    </div>
+    <div class="form-row">
+        <input type="submit" class="btn-submit" value="Ajouter Véhicule">
+    </div>
 </form>
+
 
 
                 </div>

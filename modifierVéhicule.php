@@ -113,7 +113,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/dashboard.css">
-    <title>AdminHub</title>
+    <title>AdminHub</title><style>
+    .form-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-right: 20px;
+    }
+
+    .form-group:last-child {
+        margin-right: 0;
+    }
+
+    .form-group label {
+        width: 220px;
+        display: inline-block;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 250px;
+        height: 35px;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .btn-submit {
+        width: 200px;
+        height: 40px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
 
@@ -220,78 +256,85 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3>Modifier Véhicule</h3>
                     </div>
                     <form id="editVehicleForm" action="modifierVéhicule.php?id=<?php echo $vehicle['rowid']; ?>" method="POST" enctype="multipart/form-data">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_name">Nom du véhicule:</label>
-                                        <input type="text" name="vehicle_name" value="<?php echo $vehicle['label']; ?>" required>
-                                        <label for="vehicle_year">Année:</label>
-                                        <input type="text" name="vehicle_year" value="<?php echo $vehicle['datec']; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_description">Description:</label>
-                                        <input type="text" name="vehicle_description" value="<?php echo $vehicle['description']; ?>">
-                                        <label for="vehicle_price">Prix:</label>
-                                        <input type="text" name="vehicle_price" value="<?php echo $vehicle['price']; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_model">Modèle:</label>
-                                        <input type="text" name="vehicle_model" value="<?php echo $vehicle['note']; ?>">
-                                        <label for="vehicle_color">Couleur:</label>
-                                        <input type="text" name="vehicle_color" value="<?php echo $vehicle['color']; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_manufacturer">Fabricant:</label>
-                                        <input type="text" name="vehicle_manufacturer" value="<?php echo $vehicle['manufacturer']; ?>">
-                                        <label for="vehicle_type">Type de véhicule:</label>
-                                        <input type="text" name="vehicle_type" value="<?php echo $vehicle['vehicle_type']; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_department">Département:</label>
-                                        <input type="text" name="vehicle_department" value="<?php echo $vehicle['department']; ?>">
-                                        <label for="vehicle_fuel_type">Type de carburant:</label>
-                                        <input type="text" name="vehicle_fuel_type" value="<?php echo $vehicle['fuel_type']; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_photo">Photo:</label>
-                                        <input type="file" name="vehicle_photo">
-                                        <?php if (!empty($vehicle['photo_path'])): ?>
-                                            <img src="<?php echo $vehicle['photo_path']; ?>" alt="Vehicle Photo" style="max-width: 200px;">
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_documents">Documents:</label>
-                                        <input type="file" name="vehicle_documents[]" multiple>
-                                        <?php
-                                        if (!empty($vehicle['document_paths'])) {
-                                            $docs = explode(',', $vehicle['document_paths']);
-                                            foreach ($docs as $doc) {
-                                                echo "<a href='$doc'>Document</a><br>";
-                                            }
-                                        }
-                                        ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <button type="submit">Mettre à jour</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="form-row">
+    <div class="form-group">
+        <label for="vehicle_name">Nom du véhicule :</label>
+        <input type="text" name="vehicle_name" value="<?php echo $vehicle['label']; ?>" required>
+    </div>
+    <div class="form-group">
+        <label for="vehicle_year">Année :</label>
+        <input type="text" name="vehicle_year" value="<?php echo $vehicle['datec']; ?>">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="vehicle_description">Description :</label>
+        <input type="text" name="vehicle_description" value="<?php echo $vehicle['description']; ?>">
+    </div>
+    <div class="form-group">
+        <label for="vehicle_price">Prix :</label>
+        <input type="text" name="vehicle_price" value="<?php echo $vehicle['price']; ?>">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="vehicle_model">Modèle :</label>
+        <input type="text" name="vehicle_model" value="<?php echo $vehicle['note']; ?>">
+    </div>
+    <div class="form-group">
+        <label for="vehicle_color">Couleur :</label>
+        <input type="text" name="vehicle_color" value="<?php echo $vehicle['color']; ?>">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="vehicle_manufacturer">Fabricant :</label>
+        <input type="text" name="vehicle_manufacturer" value="<?php echo $vehicle['manufacturer']; ?>">
+    </div>
+    <div class="form-group">
+        <label for="vehicle_type">Type de véhicule :</label>
+        <input type="text" name="vehicle_type" value="<?php echo $vehicle['vehicle_type']; ?>">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="vehicle_department">Département :</label>
+        <input type="text" name="vehicle_department" value="<?php echo $vehicle['department']; ?>">
+    </div>
+    <div class="form-group">
+        <label for="vehicle_fuel_type">Type de carburant :</label>
+        <input type="text" name="vehicle_fuel_type" value="<?php echo $vehicle['fuel_type']; ?>">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="vehicle_photo">Photo :</label>
+        <input type="file" name="vehicle_photo">
+        <?php if (!empty($vehicle['photo_path'])): ?>
+            <img src="<?php echo $vehicle['photo_path']; ?>" alt="Photo du véhicule" style="max-width: 200px;">
+        <?php endif; ?>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="vehicle_documents">Documents :</label>
+        <input type="file" name="vehicle_documents[]" multiple>
+        <?php
+        if (!empty($vehicle['document_paths'])) {
+            $docs = explode(',', $vehicle['document_paths']);
+            foreach ($docs as $doc) {
+                echo "<a href='$doc'>Document</a><br>";
+            }
+        }
+        ?>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group">
+        <button type="submit">Mettre à jour</button>
+    </div>
+</div>
+
                     </form>
                 </div>
             </div>

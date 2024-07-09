@@ -82,6 +82,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="css/ajoutC.css">
    
     <title>AutoFlotte</title>
+    <style>
+    .form-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-right: 20px;
+    }
+
+    .form-group:last-child {
+        margin-right: 0;
+    }
+
+    .form-group label {
+        width: 220px;
+        display: inline-block;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 250px;
+        height: 35px;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .btn-submit {
+        width: 200px;
+        height: 40px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
 
@@ -191,103 +228,102 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h3>Ajouter Conducteur</h3>
         </div>
         <form id="addDriverForm" action="ajoutConducteur.php" method="POST" enctype="multipart/form-data">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            
-                        <label for="gender">Genre:</label>
-                            <select name="gender" style="width: 80%; height: 35px;" required>
-                                <option value="M">Masculin</option>
-                                <option value="F">Féminin</option>
-                            </select>
-                           
-                            <label for="firstname">Prénom:</label>
-                            <input type="text" name="firstname" placeholder="Prénom du conducteur" style="width: 80%; height: 35px;" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        <label for="lastname">Nom:</label>
-                            <input type="text" name="lastname" placeholder="Nom du conducteur" style="width: 80%; height: 35px;" required>
-                        
-                        
-                            <label for="address">Adresse:</label>
-                            <input type="text" name="address" placeholder="Adresse du conducteur" style="width: 80%; height: 35px;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="user_mobile">Mobile:</label>
-                            <input type="number" name="user_mobile" placeholder="Numéro de téléphone du conducteur" style="width: 75%; height: 35px;" required>
-                        
-                            <label for="email">Email:</label>
-                            <input type="email" name="email" placeholder="Email du conducteur" style="width: 80%; height: 35px;" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="department">Département:</label>
-                            <input type="text" name="department" placeholder="Département" style="width: 57.9%; height: 35px;">
-                        
-                            <label for="job">Poste:</label>
-                            <input type="text" name="job" placeholder="Poste" style="width: 70%; height: 35px;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="city">Ville:</label>
-                            <input type="text" name="city" placeholder="Ville" style="width: 80%; height: 35px;">
-                       
-                            <label for="zip">Code Postal:</label>
-                            <input type="text" name="zip" placeholder="Code Postal" style="width: 80%; height: 35px;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="photo">Photo:</label>
-                            <input type="file" name="photo" style="width: 80%;">
-                        
-                            <label for="birthdate">Date de Naissance:</label>
-                            <input type="date" name="birthdate" style="width: 80%; height: 35px;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <label for="vehicle_label">Véhicule:</label>
-                            <select name="vehicle_label" style="width: 40%; height: 45px;" required>
-                                <?php
-                                // Inclusion du fichier de connexion à la base de données
-                                include 'config.php';
+    <div class="form-row">
+        <div class="form-group">
+            <label for="gender">Genre:</label>
+            <select name="gender" class="form-control" required>
+                <option value="M">Masculin</option>
+                <option value="F">Féminin</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="firstname">Prénom:</label>
+            <input type="text" name="firstname" class="form-control" placeholder="Prénom du conducteur" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="lastname">Nom:</label>
+            <input type="text" name="lastname" class="form-control" placeholder="Nom du conducteur" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Adresse:</label>
+            <input type="text" name="address" class="form-control" placeholder="Adresse du conducteur">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="user_mobile">Mobile:</label>
+            <input type="text" name="user_mobile" class="form-control" placeholder="Numéro de téléphone du conducteur" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" class="form-control" placeholder="Email du conducteur">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="department">Département:</label>
+            <input type="text" name="department" class="form-control" placeholder="Département">
+        </div>
+        <div class="form-group">
+            <label for="job">Poste:</label>
+            <input type="text" name="job" class="form-control" placeholder="Poste">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="city">Ville:</label>
+            <input type="text" name="city" class="form-control" placeholder="Ville">
+        </div>
+        <div class="form-group">
+            <label for="zip">Code Postal:</label>
+            <input type="text" name="zip" class="form-control" placeholder="Code Postal">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="photo">Photo:</label>
+            <input type="file" name="photo" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="birthdate">Date de Naissance:</label>
+            <input type="date" name="birthdate" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_label">Véhicule:</label>
+            <select name="vehicle_label" class="form-control" required>
+                <?php
+                // Inclusion du fichier de connexion à la base de données
+                include 'config.php';
 
-                                // Sélectionner tous les véhicules depuis la table llx_product
-                                $sql = "SELECT rowid, label FROM llx_product";
-                                $result = $conn->query($sql);
+                // Sélectionner tous les véhicules depuis la table llx_product
+                $sql = "SELECT rowid, label FROM llx_product";
+                $result = $conn->query($sql);
 
-                                // Vérifier s'il y a des enregistrements
-                                if ($result->num_rows > 0) {
-                                    // Afficher les données de chaque ligne
-                                    while($row = $result->fetch_assoc()) {
-                                        echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
-                                    }
-                                } else {
-                                    echo "<option disabled>Aucun véhicule disponible</option>";
-                                }
+                // Vérifier s'il y a des enregistrements
+                if ($result->num_rows > 0) {
+                    // Afficher les données de chaque ligne
+                    while($row = $result->fetch_assoc()) {
+                        echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
+                    }
+                } else {
+                    echo "<option disabled>Aucun véhicule disponible</option>";
+                }
 
-                                // Fermer la connexion à la base de données
-                                $conn->close();
-                                ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="text-align: center;">
-                            <button type="submit" style="width: 190px; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;">Ajouter Conducteur</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
+                // Fermer la connexion à la base de données
+                $conn->close();
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <button type="submit" class="btn-submit">Ajouter Conducteur</button>
+    </div>
+</form>
+
     </div>
 </div>
 
