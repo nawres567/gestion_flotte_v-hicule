@@ -1,10 +1,10 @@
 <?php
-// Include the database connection file
+// Inclure le fichier de connexion à la base de données
 include 'config.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,6 @@ include 'config.php';
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- My CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
-   
     <title>AutoFlotte</title>
 </head>
 <body>
@@ -65,13 +64,13 @@ include 'config.php';
             <li>
                 <a href="#">
                     <i class='bx bxs-cog'></i>
-                    <span class="text">Settings</span>
+                    <span class="text">Paramètres</span>
                 </a>
             </li>
             <li>
                 <a href="logout.php" class="logout">
                     <i class='bx bxs-log-out-circle'></i>
-                    <span class="text">Logout</span>
+                    <span class="text">Déconnexion</span>
                 </a>
             </li>
         </ul>
@@ -81,10 +80,9 @@ include 'config.php';
         <!-- NAVBAR -->
         <nav>
             <i class='bx bx-menu'></i>
-            <a href="#" class="nav-link">Categories</a>
+            <a href="#" class="nav-link">Catégories</a>
             <form action="#">
-                <div class="form-input">
-                </div>
+                <div class="form-input"></div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
             <label for="switch-mode" class="switch-mode"></label>
@@ -101,7 +99,7 @@ include 'config.php';
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Transactions du Carburant</h1>
+                    <h1>Transactions de Carburant</h1>
                     <ul class="breadcrumb">
                         <li>
                             <a href="#">Transactions de Carburant</a>
@@ -116,69 +114,57 @@ include 'config.php';
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Liste des Transactions du Carburant</h3>
-                        <button class="btn-add-transaction" style="padding: 10px 20px; width:190px; color: white;background-color: #007bff"><a href="ajoutTransaction.php" style="color: white;">Ajouter Transaction</a></button>
+                        <h3>Liste des Transactions de Carburant</h3>
+                        <button class="btn-add-transaction" style="padding: 10px 20px; width:190px; color: white; background-color: #007bff">
+                            <a href="ajoutTransaction.php" style="color: white;">Ajouter Transaction</a>
+                        </button>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Nom véhicule</th>
-                                
+                                <th>Nom du Véhicule</th>
                                 <th>Date de Transaction</th>
-                                <th>Montant</th>
+                                <th>Type de Carburant</th>
                                 <th>Quantité de Carburant</th>
                                 <th>Kilométrage</th>
+                                <th>Coût Total</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            // Include the database connection file
+                            // Inclure le fichier de connexion à la base de données
                             include 'config.php';
 
-                            // Select all transactions from llx_product_fournisseur_price table
-                            $sql = "SELECT pf.rowid AS pf_rowid, p.label AS vehicle_name, pf.price, pf.quantity, pf.unitprice, DATE(pf.datec) AS transaction_date 
+                            // Sélectionner toutes les transactions depuis la table llx_product_fournisseur_price
+                            $sql = "SELECT pf.rowid AS pf_rowid, p.label AS vehicle_name, pf.quantity, pf.mileage,pf.total ,pf.unitprice, pf.fuel_type, pf.fk_product, DATE(pf.datec) AS transaction_date 
         FROM llx_product_fournisseur_price pf 
         INNER JOIN llx_product p ON pf.fk_product = p.rowid";
-$result = $conn->query($sql);
-?>
 
+                            $result = $conn->query($sql);
 
-    
-    
-        <?php
-        // Check if there are any records
-        if ($result->num_rows > 0) {
-            // Output data of each row
-            while ($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($row['vehicle_name']) . "</td>";
-                //echo "<td>" . htmlspecialchars($row['pf_rowid']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['transaction_date']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['price']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['quantity']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['unitprice']) . "</td>";
-                echo "<td>";
-                // echo "<button style='padding: 10px 20px; width:120px; margin-right: 10px; background-color: orange;'>
-                //         <a style='color: white;' href='modifierTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action'>Modifier</a>
-                //       </button>";
-
-                echo " <a style='color: red;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
-
-
-
-                    //   echo "<button style='padding: 10px 20px; width:120px; background-color: red;'>
-                    //   <a style='color: white;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'>Supprimer</a>
-                    // </button>";
-
+                            // Vérifier s'il y a des enregistrements
+                            if ($result->num_rows > 0) {
+                                // Afficher les données de chaque ligne
+                                while ($row = $result->fetch_assoc()) {
+                                    $total_cost = $row['quantity'] * $row['unitprice'];
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($row['vehicle_name']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['transaction_date']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['fuel_type']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['quantity']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['mileage']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['total'])  . "</td>";
+                                    echo "<td>";
+                                    echo " <a style='color: red;' href='supprimerTransaction.php?id=" . htmlspecialchars($row['pf_rowid']) . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='6'>Aucune transaction trouvée.</td></tr>";
+                                echo "<tr><td colspan='7'>Aucune transaction trouvée.</td></tr>";
                             }
 
-                            // Close the database connection
+                            // Fermer la connexion à la base de données
                             $conn->close();
                             ?>
                         </tbody>

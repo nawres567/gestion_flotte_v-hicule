@@ -5,17 +5,22 @@ include 'config.php';
 // Traiter les données du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vehicle_id = $_POST['vehicle_id'];
+    $driver_id = $_POST['driver_id'];
     $transaction_date = $_POST['transaction_date'];
-    $amount = $_POST['amount'];
     $fuel_quantity = $_POST['fuel_quantity'];
     $mileage = $_POST['mileage'];
+    $unit_price = $_POST['unit_price'];
+    $fuel_type = $_POST['fuel_type']; // Champ nouveau pour le type de carburant
+
+    // Calculer le total
+    $total = $fuel_quantity * $unit_price;
 
     // Insérer les données dans la table llx_product_fournisseur_price
-    $sql = "INSERT INTO llx_product_fournisseur_price (fk_product, datec, price, quantity, tms, unitprice) 
-            VALUES ('$vehicle_id', '$transaction_date', '$amount', '$fuel_quantity', NOW(), '$mileage')";
+    $sql = "INSERT INTO llx_product_fournisseur_price (fk_product, datec, quantity, tms, unitprice, driver_id, fuel_type, mileage, total) 
+            VALUES ('$vehicle_id', '$transaction_date', '$fuel_quantity', NOW(), '$unit_price', '$driver_id', '$fuel_type', '$mileage', '$total')";
 
     if ($conn->query($sql) === TRUE) {
-        // Rediriger vers listTransactions.php après une insertion réussie
+        // Rediriger vers carburant.php après une insertion réussie
         header("Location: carburant.php");
         exit();
     } else {
@@ -26,17 +31,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <!-- My CSS -->
-    <link rel="stylesheet" href="css/dashboard.css">
-   
-    <title>AdminHub</title>
+    <!-- Mon CSS -->
+    <link rel="stylesheet" href="css/ajoutC.css">
+    <title>AutoFlotte</title>
+    <style>
+        .form-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-right: 20px;
+        }
+
+        .form-group:last-child {
+            margin-right: 0;
+        }
+
+        .form-group label {
+            width: 220px;
+            display: inline-block;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 250px;
+            height: 35px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            width: 200px;
+            height: 40px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 35%;
+        }
+    </style>
 </head>
 <body>
 
@@ -59,13 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li class="active">
+            <li>
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="carburant.php">
                     <i class='bx bxs-gas-pump'></i>
                     <span class="text">Suivi du carburant</span>
@@ -88,27 +131,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <li>
                 <a href="#">
                     <i class='bx bxs-cog'></i>
-                    <span class="text">Settings</span>
+                    <span class="text">Paramètres</span>
                 </a>
             </li>
             <li>
                 <a href="logout.php" class="logout">
                     <i class='bx bxs-log-out-circle'></i>
-                    <span class="text">Logout</span>
+                    <span class="text">Déconnexion</span>
                 </a>
             </li>
         </ul>
     </section>
 
     <section id="content">
-        <!-- NAVBAR -->
+        <!-- BARRE DE NAVIGATION -->
         <nav>
             <i class='bx bx-menu'></i>
-            <a href="#" class="nav-link">Categories</a>
+            <a href="#" class="nav-link">Catégories</a>
             <form action="#">
                 <div class="form-input">
-                    
-                    
                 </div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
@@ -121,20 +162,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <img src="img/people.webp">
             </a>
         </nav>
-        <!-- NAVBAR -->
+        <!-- BARRE DE NAVIGATION -->
 
-        <!-- MAIN -->
+        <!-- PRINCIPAL -->
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>transactions de carburant</h1>
+                    <h1>Transactions de carburant</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">transactions de carburant</a>
+                            <a href="#">Transactions de carburant</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
-                            <a class="active" href="listConducteurs.php">List transactions de carburant</a>
+                            <a class="active" href="listConducteurs.php">Liste des transactions de carburant</a>
                         </li>
                     </ul>
                 </div>
@@ -142,77 +183,92 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Ajouter transactions de carburant</h3>
+                        <h3>Ajouter une transaction de carburant</h3>
                     </div>
+
                     <form id="addTransactionForm" action="ajoutTransaction.php" method="POST">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_id">Nom du Véhicule:</label>
-                                        <select  style=" padding: 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  
-    transition: border-color 0.3s, box-shadow 0.3s;
-    width: 200px;
-    height: 40px;" name="vehicle_id" required>
-                                            <?php
-                                            // Inclusion du fichier de connexion à la base de données
-                                            include 'config.php';
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehicle_id">Véhicule :</label>
+                                <select name="vehicle_id" id="vehicle_id" required>
+                                    <?php
+                                    // Inclure le fichier de connexion à la base de données
+                                    include 'config.php';
 
-                                            // Sélectionner tous les véhicules depuis la table llx_product
-                                            $sql = "SELECT rowid, label FROM llx_product";
-                                            $result = $conn->query($sql);
+                                    // Récupérer les véhicules depuis la table llx_product
+                                    $sql = "SELECT rowid, label FROM llx_product";
+                                    $result = $conn->query($sql);
 
-                                            // Vérifier s'il y a des enregistrements
-                                            if ($result->num_rows > 0) {
-                                                // Afficher les données de chaque ligne
-                                                while($row = $result->fetch_assoc()) {
-                                                    echo "<option value='" . $row['rowid'] . "'>" . $row['label'] . "</option>";
-                                                }
-                                            } else {
-                                                echo "<option disabled>Aucun véhicule disponible</option>";
-                                            }
+                                    // Vérifier s'il y a des enregistrements
+                                    if ($result->num_rows > 0) {
+                                        // Afficher les options du select
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<option value='" . htmlspecialchars($row['rowid']) . "'>" . htmlspecialchars($row['label']) . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option value=''>Aucun véhicule trouvé</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="driver_id">Nom du Conducteur :</label>
+                                <select name="driver_id" id="driver_id" required>
+                                    <?php
+                                    // Inclure le fichier de connexion à la base de données
+                                    include 'config.php';
 
-                                            // Fermer la connexion à la base de données
-                                            $conn->close();
-                                            ?>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="transaction_date">Date de Transaction:</label>
-                                        <input type="date" name="transaction_date" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="amount">Montant:</label>
-                                        <input type="number" step="0.01" name="amount" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="fuel_quantity">Quantité de Carburant:</label>
-                                        <input type="number" step="0.01" name="fuel_quantity" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="mileage">Kilométrage:</label>
-                                        <input type="number" name="mileage" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <button  style="padding: 10px 20px; width:190px; color: white;" type="submit">Ajouter Transaction</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    // Récupérer les conducteurs depuis la table llx_user où entity = 2 (par exemple)
+                                    $sql = "SELECT rowid, lastname FROM llx_user WHERE entity = 2";
+                                    $result = $conn->query($sql);
+
+                                    // Vérifier s'il y a des enregistrements
+                                    if ($result->num_rows > 0) {
+                                        // Afficher les options du select
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<option value='" . htmlspecialchars($row['rowid']) . "'>" . htmlspecialchars($row['lastname']) . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option value=''>Aucun conducteur trouvé</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="transaction_date">Date de transaction :</label>
+                                <input type="date" name="transaction_date" id="transaction_date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fuel_type">Type de carburant :</label>
+                                <select name="fuel_type" id="fuel_type" required>
+                                    <option value="Essence">Essence</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Électrique">Électrique</option>
+                                    <option value="Hybride">Hybride</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fuel_quantity">Quantité de carburant :</label>
+                                <input type="number" name="fuel_quantity" id="fuel_quantity" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="mileage">Kilométrage :</label>
+                                <input type="number" name="mileage" id="mileage" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="unit_price">Prix unitaire :</label>
+                                <input type="number" name="unit_price" id="unit_price" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-submit">Ajouter</button>
+                        </div>
                     </form>
                 </div>
             </div>

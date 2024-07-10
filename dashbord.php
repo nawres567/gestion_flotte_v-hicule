@@ -22,6 +22,27 @@ $count_result_vehicules = $conn->query($count_sql_vehicules);
 $count_row_vehicules = $count_result_vehicules->fetch_assoc();
 $vehicules_count = $count_row_vehicules['count'];
 
+
+
+
+//diagramme 
+$sql = "SELECT DATE(datec) AS transaction_date, SUM(total) AS total
+        FROM llx_product_fournisseur_price
+        GROUP BY DATE(datec)
+        ORDER BY DATE(datec) ASC";
+
+$result = $conn->query($sql);
+
+$dates = [];
+$totals = [];
+
+if ($result->num_rows > 0) {
+    // Parcourir les résultats et stocker les données dans les tableaux PHP
+    while ($row = $result->fetch_assoc()) {
+        $dates[] = $row['transaction_date'];
+        $totals[] = $row['total'];
+    }
+}
 // Fermer la connexion à la base de données
 $conn->close();
 ?>
@@ -36,8 +57,9 @@ $conn->close();
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<!-- My CSS -->
 	<link rel="stylesheet" href="css/dashboard.css">
-   
-	<title>AdminHub</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<title>AutoFlotte</title>
 </head>
 <body>
 
@@ -167,4 +189,46 @@ $conn->close();
 				</li>
 			</ul>
 	
-			
+			<canvas id="myChart"  width="200" height="200"></canvas>
+			<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Récupérer les données pour le diagramme depuis PHP
+    let dates = <?php echo json_encode($dates); ?>; // Tableau des dates
+    let totals = <?php echo json_encode($totals); ?>; // Tableau des totaux
+
+    // Configuration du diagramme
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Total de carburant par jour',
+                data: totals,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                       
+                    }
+                }
+            },
+            barThickness: 20 // Ajustez cette valeur pour modifier la taille des barres
+           
+        }
+    });
+});
+
+</script>

@@ -125,6 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         border: none;
         border-radius: 6px;
         cursor: pointer;
+        margin-left:35%;
     }
 </style>
 </head>
