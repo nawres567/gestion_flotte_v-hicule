@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li >
+            <li>
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
@@ -149,11 +149,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="text">Suivi du carburant</span>
                 </a>
             </li>
-            <li class="active">
+            <li  class="active">
                 <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
+            </li>
+			<li>
+              <a href="inspections.php"> <!-- Ajout du lien pour les inspections -->
+            <i class='bx bxs-check-shield'></i>
+            <span class="text">Inspections</span>
+              </a>
             </li>
             <li>
                 <a href="#">

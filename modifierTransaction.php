@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <span class="text">AutoFlotte</span>
         </a>
         <ul class="side-menu top">
-            <li>
+            <li >
                 <a href="dashbord.php">
                     <i class='bx bxs-dashboard'></i>
                     <span class="text">Dashboard</span>
@@ -114,6 +114,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
+            </li>
+			<li>
+              <a href="inspections.php"> <!-- Ajout du lien pour les inspections -->
+            <i class='bx bxs-check-shield'></i>
+            <span class="text">Inspections</span>
+              </a>
             </li>
             <li>
                 <a href="#">

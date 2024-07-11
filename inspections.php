@@ -1,5 +1,6 @@
+
 <?php
-// Include the database connection file
+// Inclure le fichier de connexion à la base de données
 include 'config.php';
 ?>
 
@@ -8,12 +9,14 @@ include 'config.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- My CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
-    <title>AdminHub</title>
-</head>
+    </head>
 <body>
 
     <!-- SIDEBAR -->
@@ -23,7 +26,7 @@ include 'config.php';
             <span class="text">AutoFlotte</span>
         </a>
         <ul class="side-menu top">
-            <li >
+            <li>
                 <a href="dashbord.php">
                     <i class='bx bxs-dashboard'></i>
                     <span class="text">Dashboard</span>
@@ -47,13 +50,13 @@ include 'config.php';
                     <span class="text">Suivi du carburant</span>
                 </a>
             </li>
-            <li class="active">
+            <li  >
                 <a href="listEntretien.php">
                     <i class='bx bxs-wrench'></i>
                     <span class="text">Maintenance</span>
                 </a>
             </li>
-			<li>
+			<li class="active">
               <a href="inspections.php"> <!-- Ajout du lien pour les inspections -->
             <i class='bx bxs-check-shield'></i>
             <span class="text">Inspections</span>
@@ -81,13 +84,17 @@ include 'config.php';
             </li>
         </ul>
     </section>
+
     <section id="content">
         <!-- NAVBAR -->
         <nav>
             <i class='bx bx-menu'></i>
             <a href="#" class="nav-link">Categories</a>
             <form action="#">
-                <div class="form-input"></div>
+                <div class="form-input">
+                    
+                    
+                </div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
             <label for="switch-mode" class="switch-mode"></label>
@@ -100,23 +107,17 @@ include 'config.php';
             </a>
         </nav>
         <!-- NAVBAR -->
-
-        <!-- MAIN -->
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Maintenance</h1>
+                    <h1>Inspections</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">Maintenance</a>
+                            <a href="#">Inspections</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
                             <a class="active" href="#">Accueil</a>
-                        </li>
-                        <li><i class='bx bx-chevron-right'></i></li>
-                        <li>
-                            <a class="active" href="calendrier.php">Calendrier</a>
                         </li>
                     </ul>
                 </div>
@@ -124,9 +125,9 @@ include 'config.php';
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Liste des entretiens</h3>
+                    <h3>Liste des Inspections</h3>
                         <button class="btn-add-driver" id="btn-add-driver" style="padding: 10px 20px; width:200px; color: white;background-color:#007bff;">
-                            <a href="ajoutEntretien.php" style="color: white;">Ajouter Entretien</a>
+                            <a href="ajoutInspections.php" style="color: white;">Ajouter Inspection</a>
                         </button>
                     </div>
                     <table>
@@ -135,40 +136,38 @@ include 'config.php';
                                 <th>Véhicule</th>
                                 <th>Conducteur</th>
                                 <th>État</th>
-                                <th>Tâche</th>
+                                <th>Formulaire</th>
                                 <th>Date</th>
-                                <th>Technicien</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php
-                        // Sélectionnez tous les entretiens depuis la table llx_product_extrafields
-                        $sql = "SELECT * FROM llx_product_extrafields";
+                        // Select all inspections from llx_product_lang table
+                        $sql = "SELECT * FROM llx_product_lang";
                         $result = $conn->query($sql);
 
-                        // Vérifiez s'il y a des enregistrements
+                        // Check if there are any records
                         if ($result->num_rows > 0) {
-                            // Affichez les données de chaque ligne
+                            // Display data for each row
                             while($row = $result->fetch_assoc()) {
                                 echo "<tr>";
-                                echo "<td>" . $row['nom'] . "</td>";
-                                echo "<td>" . $row['conducteur'] . "</td>";
-                                echo "<td>" . $row['tache'] . "</td>";
-                                echo "<td>" . $row['etat'] . "</td>";
-                                echo "<td>" . $row['date'] . "</td>";
-                                echo "<td>" . $row['technicien'] . "</td>";
+                                echo "<td>" . htmlspecialchars($row['nom_vehicule']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['nom_conducteur']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['etat']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['formulaire_inspection']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['date_inspection']) . "</td>";
                                 echo "<td>";
-                                echo " <a style='color:jaune;' href='modifierEntretien.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a>  ";
-                                echo " <a style='color: red;' href='supprimerEntretien.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i> </a>";
+                                echo "<a style='color:jaune;' href='modifierInspection.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a>  ";
+                                echo "<a style='color: red;' href='supprimerInspection.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i></a>";
                                 echo "</td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='7'>Aucun entretien trouvé.</td></tr>";
+                            echo "<tr><td colspan='6'>Aucune inspection trouvée.</td></tr>";
                         }
 
-                        // Fermez la connexion à la base de données
+                        // Close the database connection
                         $conn->close();
                         ?>
                         </tbody>
@@ -179,12 +178,12 @@ include 'config.php';
         <!-- MAIN -->
     </section>
     <!-- CONTENT -->
+
+    <!-- JavaScript for confirmation dialog -->
     <script>
     function confirmDelete() {
-        return confirm("Êtes-vous sûr de vouloir supprimer cet entretien ?");
+        return confirm("Êtes-vous sûr de vouloir supprimer cette inspection ?");
     }
     </script>
-
-    <script src="script.js"></script>
 </body>
 </html>

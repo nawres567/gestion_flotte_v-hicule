@@ -23,7 +23,7 @@ include 'config.php';
             <span class="text">AutoFlotte</span>
         </a>
         <ul class="side-menu top">
-            <li>
+            <li >
                 <a href="dashbord.php">
                     <i class='bx bxs-dashboard'></i>
                     <span class="text">Dashboard</span>
@@ -53,6 +53,12 @@ include 'config.php';
                     <span class="text">Maintenance</span>
                 </a>
             </li>
+			<li>
+              <a href="inspections.php"> <!-- Ajout du lien pour les inspections -->
+            <i class='bx bxs-check-shield'></i>
+            <span class="text">Inspections</span>
+              </a>
+            </li>
             <li>
                 <a href="#">
                     <i class='bx bxs-map'></i>
@@ -64,13 +70,13 @@ include 'config.php';
             <li>
                 <a href="#">
                     <i class='bx bxs-cog'></i>
-                    <span class="text">Paramètres</span>
+                    <span class="text">Settings</span>
                 </a>
             </li>
             <li>
                 <a href="logout.php" class="logout">
                     <i class='bx bxs-log-out-circle'></i>
-                    <span class="text">Déconnexion</span>
+                    <span class="text">Logout</span>
                 </a>
             </li>
         </ul>

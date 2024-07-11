@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <span class="text">AutoFlotte</span>
         </a>
         <ul class="side-menu top">
-            <li>
+            <li >
                 <a href="dashbord.php">
                     <i class='bx bxs-dashboard'></i>
                     <span class="text">Dashboard</span>
@@ -190,6 +190,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="text">Maintenance</span>
                 </a>
             </li>
+			<li>
+              <a href="inspections.php"> <!-- Ajout du lien pour les inspections -->
+            <i class='bx bxs-check-shield'></i>
+            <span class="text">Inspections</span>
+              </a>
+            </li>
             <li>
                 <a href="#">
                     <i class='bx bxs-map'></i>
@@ -211,6 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
         </ul>
+    </section>
     </section>
 
     <section id="content">
@@ -331,7 +338,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 <div class="form-row">
     <div class="form-group">
-        <button type="submit">Mettre à jour</button>
+        <button type="submit" style="width: 40%; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px; margin-left: 400px;" >Modifier Véhicule</button>
     </div>
 </div>
 

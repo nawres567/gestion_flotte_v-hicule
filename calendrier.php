@@ -55,63 +55,69 @@ $conn->close();
 <body>
 
 <section id="sidebar">
-    <a href="#" class="brand">
-        <i class='bx bxs-car'></i>
-        <span class="text">AutoFlotte</span>
-    </a>
-    <ul class="side-menu top">
-        <li>
-            <a href="dashbord.php">
-                <i class='bx bxs-dashboard'></i>
-                <span class="text">Dashboard</span>
-            </a>
-        </li>
-        <li>
-            <a href="vehicule.php">
-                <i class='bx bxs-car'></i>
-                <span class="text">Véhicules</span>
-            </a>
-        </li>
-        <li>
-            <a href="listConducteurs.php">
-                <i class='bx bxs-group'></i>
-                <span class="text">Conducteurs</span>
-            </a>
-        </li>
-        <li>
-            <a href="carburant.php">
-                <i class='bx bxs-gas-pump'></i>
-                <span class="text">Suivi du carburant</span>
-            </a>
-        </li>
-        <li class="active">
-            <a href="listEntretien.php">
-                <i class='bx bxs-wrench'></i>
-                <span class="text">Maintenance</span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class='bx bxs-map'></i>
-                <span class="text">Localisation</span>
-            </a>
-        </li>
-    </ul>
-    <ul class="side-menu">
-        <li>
-            <a href="#">
-                <i class='bx bxs-cog'></i>
-                <span class="text">Settings</span>
-            </a>
-        </li>
-        <li>
-            <a href="logout.php" class="logout">
-                <i class='bx bxs-log-out-circle'></i>
-                <span class="text">Logout</span>
-            </a>
-        </li>
-    </ul>
-</section>
+        <a href="#" class="brand">
+            <i class='bx bxs-car'></i>
+            <span class="text">AutoFlotte</span>
+        </a>
+        <ul class="side-menu top">
+            <li >
+                <a href="dashbord.php">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="vehicule.php">
+                    <i class='bx bxs-car'></i>
+                    <span class="text">Véhicules</span>
+                </a>
+            </li>
+            <li >
+                <a href="listConducteurs.php">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">Conducteurs</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="carburant.php">
+                    <i class='bx bxs-gas-pump'></i>
+                    <span class="text">Suivi du carburant</span>
+                </a>
+            </li>
+            <li >
+                <a href="listEntretien.php">
+                    <i class='bx bxs-wrench'></i>
+                    <span class="text">Maintenance</span>
+                </a>
+            </li>
+			<li >
+              <a href="inspections.php"> <!-- Ajout du lien pour les inspections -->
+            <i class='bx bxs-check-shield'></i>
+            <span class="text">Inspections</span>
+              </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-map'></i>
+                    <span class="text">Localisation</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="#">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="logout.php" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
 
 <section id="content">
     <nav>
