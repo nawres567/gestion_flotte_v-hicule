@@ -1,38 +1,39 @@
 <?php
-include 'config.php';
-
-// Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve form data
+    include 'config.php';
+
+    // Récupération des données du formulaire
     $nom_vehicule = $_POST['nom_vehicule'];
     $formulaire_inspection = $_POST['formulaire_inspection'];
     $date_inspection = $_POST['date_inspection'];
-    $nom_conducteur = $_POST['nom_conducteur'];
     $etat = $_POST['etat'];
+    $nom_conducteur = $_POST['nom_conducteur'];
 
-    // Prepare SQL statement for inserting inspection data
-    $sql_inspection = "INSERT INTO llx_product_lang (fk_product, label, description, date_inspection, nom_conducteur, etat) 
-                      VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt_inspection = $conn->prepare($sql_inspection);
-    if ($stmt_inspection === false) {
+    // Préparation de la requête SQL pour insérer les données dans llx_printing
+    $sql = "INSERT INTO llx_printing (nom_vehicule, formulaire_inspection, date_inspection, etat, nom_conducteur) 
+            VALUES (?, ?, ?, ?, ?)";
+
+    // Préparation de la requête SQL sécurisée
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
         trigger_error($conn->error, E_USER_ERROR);
     }
 
-    // Bind parameters and execute the inspection query
-    $stmt_inspection->bind_param("isssis", $nom_vehicule, $nom_vehicule, $formulaire_inspection, $date_inspection, $nom_conducteur, $etat);
-
-    // Execute the inspection query
-    if ($stmt_inspection->execute()) {
+    // Liaison des paramètres et exécution de la requête
+    $stmt->bind_param("sssss", $nom_vehicule, $formulaire_inspection, $date_inspection, $etat, $nom_conducteur);
+    
+    // Exécution de la requête
+    if ($stmt->execute()) {
         echo "Inspection ajoutée avec succès.";
-        // Redirect to the inspections page
+        // Redirection vers inspections.php
         header("Location: inspections.php");
         exit();
     } else {
-        echo "Erreur lors de l'ajout de l'inspection : " . $stmt_inspection->error;
+        echo "Erreur lors de l'ajout de l'inspection: " . $stmt->error;
     }
 
-    // Close the statement and the database connection
-    $stmt_inspection->close();
+    // Fermeture de la connexion
+    $stmt->close();
     $conn->close();
 }
 ?>
@@ -205,67 +206,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <h3>Ajouter Inspection</h3>
                 </div>
                 <form id="addInspectionForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nom_vehicule">Nom du Véhicule:</label>
-                            <select name="nom_vehicule" id="nom_vehicule" required>
-                                <?php
-                                // Fetch vehicles from database
-                                $sql = "SELECT rowid, label FROM llx_product";
-                                $result = $conn->query($sql);
-
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<option value='" . htmlspecialchars($row['rowid']) . "'>" . htmlspecialchars($row['label']) . "</option>";
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nom_vehicule">Nom du Véhicule:</label>
+                                <select name="nom_vehicule" class="form-control" required>
+                                    <?php
+                                    include 'config.php';
+                                    $sql = "SELECT rowid, label FROM llx_product";
+                                    $result = $conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        while($row = $result->fetch_assoc()) {
+                                            echo "<option value='" . $row['label'] . "'>" . $row['label'] . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option disabled>Aucun véhicule disponible</option>";
                                     }
-                                } else {
-                                    echo "<option value=''>Aucun véhicule trouvé</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="formulaire_inspection">Formulaire d'Inspection:</label>
-                            <input type="text" name="formulaire_inspection" class="form-control" placeholder="Formulaire d'inspection" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="date_inspection">Date d'Inspection:</label>
-                            <input type="date" name="date_inspection" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nom_conducteur">Nom du Conducteur:</label>
-                            <select name="nom_conducteur" id="nom_conducteur" required>
-                                <?php
-                                // Fetch drivers from database (example)
-                                $sql = "SELECT rowid, lastname FROM llx_user WHERE entity = 2";
-                                $result = $conn->query($sql);
-
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<option value='" . htmlspecialchars($row['rowid']) . "'>" . htmlspecialchars($row['lastname']) . "</option>";
+                                    $conn->close();
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="nom_conducteur">Nom du Conducteur:</label>
+                                <select name="nom_conducteur" class="form-control" required>
+                                    <?php
+                                    include 'config.php';
+                                    $sql = "SELECT rowid, lastname FROM llx_user WHERE entity = 2";
+                                    $result = $conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        while($row = $result->fetch_assoc()) {
+                                            echo "<option value='" . $row['lastname'] . "'>" . $row['lastname'] . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option disabled>Aucun conducteur trouvé</option>";
                                     }
-                                } else {
-                                    echo "<option value=''>Aucun conducteur trouvé</option>";
-                                }
-                                ?>
-                            </select>
+                                    $conn->close();
+                                    ?>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="etat">État:</label>
-                        <select name="etat" id="etat" required>
-                            <option value="Complétée">Complétée</option>
-                            <option value="à faire">à faire</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <button type="submit" class="btn-submit">Ajouter Inspection</button>
-                    </div>
-                </form>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="formulaire_inspection">Formulaire d'Inspection:</label>
+                                <input type="text" name="formulaire_inspection" class="form-control" placeholder="Formulaire d'Inspection" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="etat">État:</label>
+                                <select name="etat" class="form-control" required>
+                                    <option value="à faire">À faire</option>
+                                    <option value="en cours">En cours</option>
+                                    <option value="terminé">Terminé</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date_inspection">Date d'Inspection:</label>
+                                <input type="date" name="date_inspection" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <button type="submit" class="btn-submit">Ajouter Inspection</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </section>
 </body>
 </html>

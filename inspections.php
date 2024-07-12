@@ -133,18 +133,23 @@ include 'config.php';
                     <table>
                         <thead>
                             <tr>
+                                <th>Référence</th>
                                 <th>Véhicule</th>
                                 <th>Conducteur</th>
                                 <th>État</th>
                                 <th>Formulaire</th>
                                 <th>Date</th>
-                                <th>Actions</th>
+                               
+                               
                             </tr>
                         </thead>
                         <tbody>
                         <?php
-                        // Select all inspections from llx_product_lang table
-                        $sql = "SELECT * FROM llx_product_lang";
+                        // Select all inspections from llx_printing table and join with llx_product table to get the ref_ext
+                        $sql = "SELECT p.rowid, p.nom_vehicule, p.formulaire_inspection, p.date_inspection, p.etat, p.nom_conducteur, pr.ref_ext
+        FROM llx_printing p
+        LEFT JOIN llx_product pr ON p.nom_vehicule = pr.label";
+
                         $result = $conn->query($sql);
 
                         // Check if there are any records
@@ -152,19 +157,19 @@ include 'config.php';
                             // Display data for each row
                             while($row = $result->fetch_assoc()) {
                                 echo "<tr>";
+                                echo "<td>" . htmlspecialchars($row['ref_ext']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['nom_vehicule']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['nom_conducteur']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['etat']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['formulaire_inspection']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['date_inspection']) . "</td>";
                                 echo "<td>";
-                                echo "<a style='color:jaune;' href='modifierInspection.php?id=" . $row['rowid'] . "' class='btn-action'><i class='bx bx-edit'></i> </a>  ";
                                 echo "<a style='color: red;' href='supprimerInspection.php?id=" . $row['rowid'] . "' class='btn-action' onclick='return confirmDelete()'><i class='bx bx-trash'></i></a>";
                                 echo "</td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>Aucune inspection trouvée.</td></tr>";
+                            echo "<tr><td colspan='7'>Aucune inspection trouvée.</td></tr>";
                         }
 
                         // Close the database connection
