@@ -97,11 +97,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <!-- My CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
-    <title>AdminHub</title>
+    <title>AdminHub</title><style>
+    .form-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-right: 20px;
+    }
+
+    .form-group:last-child {
+        margin-right: 0;
+    }
+
+    .form-group label {
+        width: 220px;
+        display: inline-block;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 250px;
+        height: 35px;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .btn-submit {
+        width: 200px;
+        height: 40px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
 
@@ -118,13 +152,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="text">Dashboard</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="vehicule.php">
                     <i class='bx bxs-car'></i>
                     <span class="text">Véhicules</span>
                 </a>
             </li>
-            <li class="active">
+            <li>
                 <a href="listConducteurs.php">
                     <i class='bx bxs-group'></i>
                     <span class="text">Conducteurs</span>
@@ -170,6 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </li>
         </ul>
     </section>
+    </section>
 
     <section id="content">
         <!-- NAVBAR -->
@@ -177,7 +212,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <i class='bx bx-menu'></i>
             <a href="#" class="nav-link">Categories</a>
             <form action="#">
-                <div class="form-input"></div>
+                <div class="form-input">
+                </div>
             </form>
             <input type="checkbox" id="switch-mode" hidden>
             <label for="switch-mode" class="switch-mode"></label>
@@ -195,14 +231,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h1>Conducteurs</h1>
+                    <h1>Véhicules</h1>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">Conducteurs</a>
+                            <a href="#">Véhicules</a>
                         </li>
                         <li><i class='bx bx-chevron-right'></i></li>
                         <li>
-                            <a class="active" href="listConducteurs.php">Modifier Conducteur</a>
+                            <a class="active" href="vehicule.php">Modifier Véhicule</a>
                         </li>
                     </ul>
                 </div>
@@ -210,46 +246,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Modifier Conducteur</h3>
+                        <h3>Modifier Véhicule</h3>
                     </div>
                     <form id="editDriverForm" action="modifierConducteur.php?id=<?php echo $driver['rowid']; ?>" method="POST" enctype="multipart/form-data">
     <div class="form-row">
         <div class="form-group">
             <label for="gender">Genre:</label>
-            <select name="gender" required class="form-control">
+            <select name="gender" required style="width: 40%; height: 35px;">
                 <option value="M" <?php if ($driver['gender'] == 'M') echo 'selected'; ?>>Masculin</option>
                 <option value="F" <?php if ($driver['gender'] == 'F') echo 'selected'; ?>>Féminin</option>
             </select>
         </div>
         <div class="form-group">
             <label for="lastname">Nom:</label>
-            <input type="text" name="lastname" value="<?php echo $driver['lastname']; ?>" required class="form-control">
+            <input type="text" name="lastname" value="<?php echo $driver['lastname']; ?>" required style="width: 40%; height: 35px;">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group">
             <label for="firstname">Prénom:</label>
-            <input type="text" name="firstname" value="<?php echo $driver['firstname']; ?>" required class="form-control">
+            <input type="text" name="firstname" value="<?php echo $driver['firstname']; ?>" required style="width: 39%; height: 35px;">
         </div>
         <div class="form-group">
             <label for="address">Adresse:</label>
-            <input type="text" name="address" value="<?php echo $driver['address']; ?>" class="form-control">
+            <input type="text" name="address" value="<?php echo $driver['address']; ?>" style="width: 40%; height: 35px;">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group">
             <label for="user_mobile">Mobile:</label>
-            <input type="number" name="user_mobile" value="<?php echo $driver['user_mobile']; ?>" required class="form-control">
+            <input type="number" name="user_mobile" value="<?php echo $driver['user_mobile']; ?>" required style="width: 40%; height: 35px;">
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" name="email" value="<?php echo $driver['email']; ?>" required class="form-control">
+            <input type="email" name="email" value="<?php echo $driver['email']; ?>" required style="width: 40%; height: 35px;">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group">
             <label for="vehicle_label">Véhicule:</label>
-            <select name="vehicle_label" required class="form-control">
+            <select name="vehicle_label" required style="width: 38.5%; height: 35px;">
                 <option value="">Sélectionner un véhicule</option>
                 <?php
                 // Fetch vehicle options from llx_product table
@@ -257,7 +293,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $vehicle_result = $conn->query($vehicle_sql);
 
                 while ($vehicle_row = $vehicle_result->fetch_assoc()) {
-                    $selected = ($vehicle_row['label'] == $driver['vehicle_label']) ? 'selected' : '';
+                    $selected = ($vehicle_row['label'] == $driver['personal_email']) ? 'selected' : '';
                     echo "<option value='" . $vehicle_row['rowid'] . "' $selected>" . $vehicle_row['label'] . "</option>";
                 }
                 ?>
@@ -265,50 +301,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="form-group">
             <label for="department">Département:</label>
-            <input type="text" name="department" value="<?php echo $driver['department']; ?>" class="form-control">
+            <input type="text" name="department" value="<?php echo $driver['signature']; ?>" style="width: 40%; height: 35px;">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group">
             <label for="job">Poste:</label>
-            <input type="text" name="job" value="<?php echo $driver['job']; ?>" class="form-control">
+            <input type="text" name="job" value="<?php echo $driver['job']; ?>" style="width: 41%; height: 35px;">
         </div>
         <div class="form-group">
             <label for="city">Ville:</label>
-            <input type="text" name="city" value="<?php echo $driver['city']; ?>" class="form-control">
+            <input type="text" name="city" value="<?php echo $driver['lang']; ?>" style="width: 40%; height: 35px;">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group">
             <label for="zip">Code Postal:</label>
-            <input type="number" name="zip" value="<?php echo $driver['zip']; ?>" required class="form-control">
+            <input type="number" name="zip" value="<?php echo $driver['zip']; ?>" required style="width: 36%; height: 35px;">
         </div>
         <div class="form-group">
             <label for="birthdate">Date de Naissance:</label>
-            <input type="date" name="birthdate" value="<?php echo $driver['birthdate']; ?>" required class="form-control">
+            <input type="date" name="birthdate" value="<?php echo $driver['birth']; ?>" required style="width: 40%; height: 35px;">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group">
             <label for="photo">Photo:</label>
-            <input type="file" name="photo" accept="image/*" class="form-control">
+            <input type="file" name="photo" accept="image/*" style="width: 80%; height: 35px;">
             <?php if ($driver['photo']): ?>
-                <img src="uploads/<?php echo $driver['photo']; ?>" alt="Photo conducteur" style="width: 100px; height: 100px;">
+                <img src="uploads/<?php echo $driver['photo']; ?>" alt="Driver Photo" style="width: 100px; height: 100px;">
             <?php endif; ?>
         </div>
     </div>
     <div class="form-row">
         <div class="form-group">
-            <input type="submit" value="Enregistrer" class="btn btn-primary">
+            <input type="submit" value="Enregistrer" style="width: 190px; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;">
         </div>
     </div>
 </form>
-
-                </div>
             </div>
         </main>
         <!-- MAIN -->
     </section>
-    <!-- CONTENT -->
 </body>
 </html>
