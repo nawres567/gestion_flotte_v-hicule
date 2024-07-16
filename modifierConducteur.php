@@ -213,95 +213,97 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3>Modifier Conducteur</h3>
                     </div>
                     <form id="editDriverForm" action="modifierConducteur.php?id=<?php echo $driver['rowid']; ?>" method="POST" enctype="multipart/form-data">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <label for="gender">Genre:</label>
-                                        <select name="gender" required style="width: 40%; height: 35px;">
-                                            <option value="M" <?php if ($driver['gender'] == 'M') echo 'selected'; ?>>Masculin</option>
-                                            <option value="F" <?php if ($driver['gender'] == 'F') echo 'selected'; ?>>Féminin</option>
-                                        </select>
-                                 
-                                        <label for="lastname">Nom:</label>
-                                        <input type="text" name="lastname" value="<?php echo $driver['lastname']; ?>" required style="width: 40%; height: 35px;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="firstname">Prénom:</label>
-                                        <input type="text" name="firstname" value="<?php echo $driver['firstname']; ?>" required style="width: 39%; height: 35px;">
-                                 
-                                        <label for="address">Adresse:</label>
-                                        <input type="text" name="address" value="<?php echo $driver['address']; ?>" style="width: 40%; height: 35px;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="user_mobile">Mobile:</label>
-                                        <input type="number" name="user_mobile" value="<?php echo $driver['user_mobile']; ?>" required style="width: 40%; height: 35px;">
-                                   
-                                        <label for="email">Email:</label>
-                                        <input type="email" name="email" value="<?php echo $driver['email']; ?>" required style="width: 40%; height: 35px;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="vehicle_label">Véhicule:</label>
-                                        <select name="vehicle_label" required style="width: 38.5%; height: 35px;">
-                                            <option value="">Sélectionner un véhicule</option>
-                                            <?php
-                                            // Fetch vehicle options from llx_product table
-                                            $vehicle_sql = "SELECT rowid, label FROM llx_product";
-                                            $vehicle_result = $conn->query($vehicle_sql);
+    <div class="form-row">
+        <div class="form-group">
+            <label for="gender">Genre:</label>
+            <select name="gender" required class="form-control">
+                <option value="M" <?php if ($driver['gender'] == 'M') echo 'selected'; ?>>Masculin</option>
+                <option value="F" <?php if ($driver['gender'] == 'F') echo 'selected'; ?>>Féminin</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="lastname">Nom:</label>
+            <input type="text" name="lastname" value="<?php echo $driver['lastname']; ?>" required class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="firstname">Prénom:</label>
+            <input type="text" name="firstname" value="<?php echo $driver['firstname']; ?>" required class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="address">Adresse:</label>
+            <input type="text" name="address" value="<?php echo $driver['address']; ?>" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="user_mobile">Mobile:</label>
+            <input type="number" name="user_mobile" value="<?php echo $driver['user_mobile']; ?>" required class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="<?php echo $driver['email']; ?>" required class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="vehicle_label">Véhicule:</label>
+            <select name="vehicle_label" required class="form-control">
+                <option value="">Sélectionner un véhicule</option>
+                <?php
+                // Fetch vehicle options from llx_product table
+                $vehicle_sql = "SELECT rowid, label FROM llx_product";
+                $vehicle_result = $conn->query($vehicle_sql);
 
-                                            while ($vehicle_row = $vehicle_result->fetch_assoc()) {
-                                                $selected = ($vehicle_row['label'] == $driver['personal_email']) ? 'selected' : '';
-                                                echo "<option value='" . $vehicle_row['rowid'] . "' $selected>" . $vehicle_row['label'] . "</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                   
-                                        <label for="department">Département:</label>
-                                        <input type="text" name="department" value="<?php echo $driver['signature']; ?>" style="width: 40%; height: 35px;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="job">Poste:</label>
-                                        <input type="text" name="job" value="<?php echo $driver['job']; ?>" style="width: 41%; height: 35px;">
-                                   
-                                        <label for="city">Ville:</label>
-                                        <input type="text" name="city" value="<?php echo $driver['lang']; ?>" style="width: 40%; height: 35px;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="zip">Code Postal:</label>
-                                        <input type="number" name="zip" value="<?php echo $driver['zip']; ?>" required style="width: 36%; height: 35px;">
-                                    
-                                        <label for="birthdate">Date de Naissance:</label>
-                                        <input type="date" name="birthdate" value="<?php echo $driver['birth']; ?>" required style="width: 40%; height: 35px;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="photo">Photo:</label>
-                                        <input type="file" name="photo" accept="image/*" style="width: 80%; height: 35px;">
-                                        <?php if ($driver['photo']): ?>
-                                            <img src="uploads/<?php echo $driver['photo']; ?>" alt="Driver Photo" style="width: 100px; height: 100px;">
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="submit" value="Enregistrer" style="width: 190px; height: 40px; background-color: #007bff; color: white; border: none; border-radius: 6px;">
-                                        </td>
-                                    </tr>
+                while ($vehicle_row = $vehicle_result->fetch_assoc()) {
+                    $selected = ($vehicle_row['label'] == $driver['vehicle_label']) ? 'selected' : '';
+                    echo "<option value='" . $vehicle_row['rowid'] . "' $selected>" . $vehicle_row['label'] . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="department">Département:</label>
+            <input type="text" name="department" value="<?php echo $driver['department']; ?>" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="job">Poste:</label>
+            <input type="text" name="job" value="<?php echo $driver['job']; ?>" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="city">Ville:</label>
+            <input type="text" name="city" value="<?php echo $driver['city']; ?>" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="zip">Code Postal:</label>
+            <input type="number" name="zip" value="<?php echo $driver['zip']; ?>" required class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="birthdate">Date de Naissance:</label>
+            <input type="date" name="birthdate" value="<?php echo $driver['birthdate']; ?>" required class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="photo">Photo:</label>
+            <input type="file" name="photo" accept="image/*" class="form-control">
+            <?php if ($driver['photo']): ?>
+                <img src="uploads/<?php echo $driver['photo']; ?>" alt="Photo conducteur" style="width: 100px; height: 100px;">
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <input type="submit" value="Enregistrer" class="btn btn-primary">
+        </div>
+    </div>
+</form>
 
-                            </tbody>
-                        </table>
-                    </form>
                 </div>
             </div>
         </main>
